@@ -23,6 +23,9 @@
       network = {
         enable = true;
       };
+      yazi = {
+        enable = true;
+      };
       nix = {
         enable = true;
       };

@@ -15,6 +15,11 @@ in {
   };
 
   config = lib.mkIf (cfg.enable && nodeCfg.enable) {
+    xanterella = {
+      vlc = {
+        enable = true;
+      };
+    };
     virtualisation = {
       oci-containers = {
         containers = {
@@ -25,10 +30,13 @@ in {
               "/mnt/server-data/makemkv/config:/config"
               "/mnt/server-data/makemkv/storage:/storage"
             ];
+            devices = [
+              "/dev/sr0:/dev/sr0"
+              "/dev/sg0:/dev/sg0"
+            ];
             extraOptions = [
-              "--device=/dev/sr0:/dev/sr0"
-              "--device=/dev/sg0:/dev/sg0"
               "--network=host"
+              "--privileged"
             ];
           };
         };
