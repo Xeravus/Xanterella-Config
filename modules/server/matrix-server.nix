@@ -131,6 +131,34 @@ in {
           };
         };
       };
+      caddy = {
+        enable = true;
+        virtualHosts = {
+          "https://lutik.gute-nessie.ts.net" = {
+            extraConfig = ''
+              handle /_matrix* {
+              reverse_proxy 127.0.0.1:8008
+              }
+              handle /_synapse/client* {
+              reverse_proxy 127.0.0.1:8008
+              }
+            '';
+          };
+        };
+      };
+      tailscale = {
+        enable = true;
+        permitCertUid = "caddy";
+      };
+    };
+    users = {
+      users = {
+        caddy = {
+          extraGroups = [
+            "tailscale"
+          ];
+        };
+      };
     };
     networking = {
       firewall = {
@@ -139,6 +167,7 @@ in {
         ];
       };
     };
+
     nixpkgs = {
       config = {
         permittedInsecurePackages = [

@@ -18,5 +18,6 @@
         metasploit
       ];
     };
+    networking.firewall.allowedTCPPorts = [4848];
   };
 }
