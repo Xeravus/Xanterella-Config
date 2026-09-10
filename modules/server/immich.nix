@@ -78,6 +78,11 @@ in {
           };
         };
       };
+      networking = {
+        firewall = {
+          trustedInterfaces = ["podman0" "tailscale0"];
+        };
+      };
       systemd = {
         tmpfiles = {
           rules = [
@@ -125,6 +130,12 @@ in {
           ];
         };
       };
+      networking = {
+        firewall = {
+          trustedInterfaces = ["tailscale0"];
+        };
+      };
+      networking.firewall.allowedTCPPorts = [3003];
     })
   ];
 }

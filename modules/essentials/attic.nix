@@ -26,10 +26,10 @@
     nix = {
       settings = {
         extra-substituters = [
-          "https://attic.xanterella.de/main"
+          # "https://attic.xanterella.de/main"
         ];
         extra-trusted-public-keys = [
-          "main:hb8AzhhBIUsAT+TOJnzHMC9+WiYlQh9fSGeDxzQgy4s="
+          # "main:hb8AzhhBIUsAT+TOJnzHMC9+WiYlQh9fSGeDxzQgy4s="
         ];
       };
     };
