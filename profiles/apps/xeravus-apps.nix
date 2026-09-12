@@ -24,6 +24,9 @@
       brightnessctl = {
         enable = true;
       };
+      jellyfin-bucket = {
+        enable = true;
+      };
       fastfetch = {
         enable = true;
       };

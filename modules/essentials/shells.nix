@@ -29,6 +29,8 @@
       source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
     fi
 
+    eval "$(zoxide init zsh)"
+
     # 2. Theme laden (direkt aus den Flake Inputs)
     source ${inputs.p10k-src}/powerlevel10k.zsh-theme
 
@@ -59,6 +61,7 @@ in {
         systemPackages = with pkgs; [
           zsh-powerlevel10k
           bat
+          eza
           jq
         ];
       };
@@ -98,19 +101,21 @@ in {
           ];
 
           shellAliases = {
-            l = "ls -lha";
+            l = "eza -lha";
+            ls = "eza";
+            z = "zoxide";
             cl = "clear";
             f = "fastfetch";
             v = "nvim";
             vim = "nvim";
             sv = "sudo nvim";
-            za = "yazi";
             nix-pr = "nixpkgs-review pr --print-result";
             b = "btop";
             carrun = "cargo c && cargo t && cargo b";
             pcl = "pyroclear && clear";
             plc = "pyroclear && clear";
             p = "pyroclear && clear";
+            cat = "bat";
             thm = "sudo openvpn ~/tryhackme/VPN/tryhackme.ovpn";
 
             lutik = "ssh cato@lutik";
@@ -118,6 +123,10 @@ in {
           };
 
           interactiveShellInit = "";
+        };
+        zoxide = {
+          enable = true;
+          enableZshIntegration = true;
         };
       };
 

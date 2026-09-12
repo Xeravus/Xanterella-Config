@@ -23,11 +23,14 @@
       monitoring = {
         enable = true;
       };
-      matrix-server = {
+      jellyfin-bucket = {
         enable = true;
       };
+      matrix-server = {
+        enable = false;
+      };
       opsbot = {
-        enable = true;
+        enable = false;
       };
       attic-server = {
         enable = true;
