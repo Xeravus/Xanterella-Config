@@ -14,7 +14,7 @@ in {
         enable = lib.mkEnableOption "Aktiviert Matrix Pipeline";
         domain = lib.mkOption {
           type = lib.types.str;
-          default = "${nodeCfg.domain}";
+          default = "${nodeCfg.tailscale-domain}";
         };
       };
     };

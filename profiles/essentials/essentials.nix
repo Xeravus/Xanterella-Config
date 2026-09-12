@@ -60,7 +60,7 @@
         enable = true;
       };
       attic = {
-        enable = false;
+        enable = true;
       };
       pyroclear = {
         enable = true;

@@ -56,7 +56,7 @@ in {
               volumes = ["/mnt/server-data/immich/db:/var/lib/postgresql/data"];
             };
             immich-server = {
-              image = "ghcr.io/immich-app/immich-server:v3.1.0";
+              image = "ghcr.io/immich-app/immich-server:v3.2.0";
               dependsOn = ["immich-postgres" "immich-redis"];
               ports = [
                 "0.0.0.0:2283:2283"
