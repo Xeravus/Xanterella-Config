@@ -7,6 +7,38 @@
 }: let
   cfg = config.xanterella.jellyfin;
   nodeCfg = config.xanterella.cluster-node;
+  remount = pkgs.writeShellScriptBin "s3remount" ''
+    echo "Stoppe rclone-Dienst..."
+    sudo systemctl stop rclone-s3-mount.service
+
+    echo "Löse blockierte FUSE-Mounts..."
+    # Das -uz erzwingt die Trennung des spezifischen Pfades, auch wenn lokale Prozesse ihn blockieren
+    sudo fusermount -uz /mnt/server-data/jellyfin/s3-media 2>/dev/null || true
+
+    echo "Starte rclone-Dienst neu..."
+    sudo systemctl start rclone-s3-mount.service
+
+    echo "Neuer Mount-Status:"
+    sudo systemctl status rclone-s3-mount.service --no-pager | grep "Active:"
+  '';
+  move = pkgs.writeShellScriptBin "s3move" ''
+    if [ -z "$1" ]; then
+      echo "Fehler: Bitte gib einen Ordnerpfad an."
+      echo "Nutzung: $0 \"/pfad/zum/ordner\""
+      exit 1
+    fi
+
+    SOURCE_PATH="$1"
+    FOLDER_NAME=$(basename "$SOURCE_PATH")
+    BUCKET_DEST="garage-s3:jellyfin-bucket/Movies"
+    RCLONE_CONF="/run/agenix/rclone-conf"
+    sudo rclone move "$SOURCE_PATH" "$BUCKET_DEST/$FOLDER_NAME" \
+      --config "$RCLONE_CONF" \
+      -P \
+      --transfers 1 \
+      --s3-disable-checksum \
+      --delete-empty-src-dirs
+  '';
 in {
   options = {
     xanterella = {
@@ -33,6 +65,7 @@ in {
       environment = {
         systemPackages = with pkgs-unstable; [
           rclone
+          move
         ];
       };
     })
@@ -50,6 +83,7 @@ in {
       environment = {
         systemPackages = with pkgs-unstable; [
           rclone
+          remount
         ];
       };
       services = {
@@ -88,7 +122,11 @@ in {
                   --vfs-cache-max-size 200G \
                   --vfs-read-chunk-size 32M \
                   --dir-cache-time 72h \
+                  --attr-timeout 1h
                   --log-level INFO \
+                  --use-server-modtime \
+                  --no-checksum \
+                  --buffer-size 0M \
                   --syslog
               '';
               ExecStop = "${pkgs.fuse}/bin/fusermount -u /mnt/server-data/jellyfin/s3-media";
