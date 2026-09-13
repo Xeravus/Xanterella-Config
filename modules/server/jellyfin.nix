@@ -21,7 +21,7 @@
     echo "Neuer Mount-Status:"
     sudo systemctl status rclone-s3-mount.service --no-pager | grep "Active:"
   '';
-  move = pkgs.writeShellScriptBin "s3move" ''
+  s3move = pkgs.writeShellScriptBin "s3move" ''
     if [ -z "$1" ]; then
       echo "Fehler: Bitte gib einen Ordnerpfad an."
       echo "Nutzung: $0 \"/pfad/zum/ordner\""
@@ -38,6 +38,8 @@
       --transfers 1 \
       --s3-disable-checksum \
       --delete-empty-src-dirs
+    sleep 3
+    rm -r $SOURCE_PATH
   '';
 in {
   options = {
@@ -65,7 +67,7 @@ in {
       environment = {
         systemPackages = with pkgs-unstable; [
           rclone
-          move
+          s3move
         ];
       };
     })
@@ -84,6 +86,7 @@ in {
         systemPackages = with pkgs-unstable; [
           rclone
           remount
+          s3move
         ];
       };
       services = {
