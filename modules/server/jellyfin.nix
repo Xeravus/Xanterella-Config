@@ -36,10 +36,9 @@
       --config "$RCLONE_CONF" \
       -P \
       --transfers 1 \
-      --s3-disable-checksum \
       --delete-empty-src-dirs
     sleep 3
-    rm -r $SOURCE_PATH
+    rm -r "$SOURCE_PATH"
   '';
 in {
   options = {
