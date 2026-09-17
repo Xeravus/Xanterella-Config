@@ -68,6 +68,10 @@
       url = "github:zhaofengli/colmena";
       flake = true;
     };
+    nix-minecraft = {
+      url = "github:Infinidoge/nix-minecraft";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     p10k-src = {
       url = "github:romkatv/powerlevel10k";
       flake = false;

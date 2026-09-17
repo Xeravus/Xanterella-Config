@@ -1,6 +1,7 @@
 {
   imports = [
     ./paperlessngx.nix
+    ./minecraft-server.nix
     ./arcane.nix
     ./makemkv.nix
     ./home-assistant.nix

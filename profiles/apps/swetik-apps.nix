@@ -43,6 +43,9 @@
       stress = {
         enable = true;
       };
+      minecraft-server = {
+        enable = true;
+      };
       metasploitable = {
         enable = true;
       };
