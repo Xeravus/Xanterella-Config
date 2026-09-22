@@ -111,6 +111,15 @@ in {
           };
         };
       };
+      hardware = {
+        graphics = {
+          enable = true;
+          extraPackages = with pkgs; [
+            libva-vdpau-driver
+            libvdpau-va-gl
+          ];
+        };
+      };
       environment = {
         systemPackages = [
           syncScript
@@ -136,19 +145,30 @@ in {
         tmpfiles = {
           rules = [
             "d /mnt/server-data/jellyfin 0775 root root -"
-            "d /mnt/server-data/jellyfin 0775 root root -"
             "d /mnt/server-data/jellyfin/s3-media 0775 root root -"
           ];
         };
         services = {
+          jellyfin = {
+            environment = {
+              LIBVA_DRIVER_NAME = "radeonsi";
+              XDG_CACHE_HOME = "/var/cache/jellyfin";
+            };
+            serviceConfig = {
+              SupplementaryGroups = [
+                "render"
+                "video"
+              ];
+            };
+          };
           yt-playlist-sync = {
             description = "Synchronisiert YouTube Playlists in den S3-Mount";
-            after = ["rclone-s3-mount.service"]; # Wartet zwingend auf deinen FUSE-Mount
+            after = ["rclone-s3-mount.service"];
             requires = ["rclone-s3-mount.service"];
             serviceConfig = {
               Type = "oneshot";
               ExecStart = "${syncScript}/bin/yt-playlist-sync";
-              User = "root"; # Oder der Benutzer, der Schreibrechte auf den FUSE-Mount hat
+              User = "root";
             };
           };
           rclone-s3-mount = {
@@ -167,7 +187,7 @@ in {
                   --vfs-cache-max-size 200G \
                   --vfs-read-chunk-size 32M \
                   --dir-cache-time 72h \
-                  --attr-timeout 1h
+                  --attr-timeout 1h \
                   --log-level INFO \
                   --use-server-modtime \
                   --no-checksum \

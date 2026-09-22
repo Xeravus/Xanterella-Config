@@ -17,26 +17,7 @@
     };
   };
 
-  config = lib.mkIf config.xanterella.minecraft-server.enable {
-    nixpkgs.overlays = [inputs.nix-minecraft.overlay];
-
-    services = {
-      minecraft-servers = {
-        enable = true;
-        eula = true;
-        # package = pkgs.neoforgeServer.neoforge-1_21_1;
-        servers = {
-          bagetti = {
-            enable = true;
-            declarative = true;
-            serverProperties = {
-              server-port = 25565;
-              gamemode = "survival";
-              max-players = 20;
-            };
-          };
-        };
-      };
+  config =
+    lib.mkIf config.xanterella.minecraft-server.enable {
     };
-  };
 }
