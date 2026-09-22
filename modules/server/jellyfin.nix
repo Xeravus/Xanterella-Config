@@ -12,7 +12,6 @@
     sudo systemctl stop rclone-s3-mount.service
 
     echo "Löse blockierte FUSE-Mounts..."
-    # Das -uz erzwingt die Trennung des spezifischen Pfades, auch wenn lokale Prozesse ihn blockieren
     sudo fusermount -uz /mnt/server-data/jellyfin/s3-media 2>/dev/null || true
 
     echo "Starte rclone-Dienst neu..."
@@ -39,6 +38,34 @@
       --delete-empty-src-dirs
     sleep 3
     rm -r "$SOURCE_PATH"
+  '';
+  playlists = {
+    "Frankfurt Tinder - Zarbex" = "https://www.youtube.com/watch?v=cdWyi0LT8eE&list=PLcngYy02sE9yGTWrY69D8BrH0ImqzE_8m&index=1";
+  };
+  localTmpPath = "/tmp/yt-staging";
+  basePath = "/mnt/server-data/jellyfin/s3-media/YTSerien";
+  syncScript = pkgs.writeShellScriptBin "yt-playlist-sync" ''
+    mkdir -p "${localTmpPath}"
+
+    ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: url: ''
+                echo "Synchronisiere Playlist: ${name}"
+                mkdir -p "${basePath}/${name} (2026)/Season 01"
+
+        ${pkgs-unstable.yt-dlp}/bin/yt-dlp \
+                --cookies ${config.age.secrets.yt-cookie.path} \
+                --download-archive "${basePath}/${name} (2026)/archive.txt" \
+                --format "bestvideo+bestaudio/best" \
+                --merge-output-format mkv \
+                --write-thumbnail \
+                --output "${localTmpPath}/${name} - S01E%(playlist_index)02d - %(title)s.%(ext)s" \
+                "${url}"
+
+                echo "Verschiebe fertige Dateien nach S3..."
+                mv ${localTmpPath}/*.* "${basePath}/${name} (2026)/Season 01/" 2>/dev/null || true
+      '')
+      playlists)}
+
+    echo "Synchronisation abgeschlossen."
   '';
 in {
   options = {
@@ -79,11 +106,17 @@ in {
             group = "root";
             mode = "0400";
           };
+          yt-cookie = {
+            file = ./../agenix/yt-cookie.txt.age;
+          };
         };
       };
       environment = {
-        systemPackages = with pkgs-unstable; [
-          rclone
+        systemPackages = [
+          syncScript
+          pkgs-unstable.yt-dlp
+          pkgs-unstable.ffmpeg
+          pkgs-unstable.rclone
           remount
           s3move
         ];
@@ -108,6 +141,16 @@ in {
           ];
         };
         services = {
+          yt-playlist-sync = {
+            description = "Synchronisiert YouTube Playlists in den S3-Mount";
+            after = ["rclone-s3-mount.service"]; # Wartet zwingend auf deinen FUSE-Mount
+            requires = ["rclone-s3-mount.service"];
+            serviceConfig = {
+              Type = "oneshot";
+              ExecStart = "${syncScript}/bin/yt-playlist-sync";
+              User = "root"; # Oder der Benutzer, der Schreibrechte auf den FUSE-Mount hat
+            };
+          };
           rclone-s3-mount = {
             description = "Rclone Mount für Garage S3 Storage";
             requires = ["network-online.target"];
@@ -134,6 +177,15 @@ in {
               ExecStop = "${pkgs.fuse}/bin/fusermount -u /mnt/server-data/jellyfin/s3-media";
               Restart = "on-failure";
               RestartSec = "10s";
+            };
+          };
+        };
+        timers = {
+          yt-playlist-sync = {
+            wantedBy = ["timers.target"];
+            timerConfig = {
+              OnCalendar = "*-*-* 03:00:00";
+              Persistent = true;
             };
           };
         };

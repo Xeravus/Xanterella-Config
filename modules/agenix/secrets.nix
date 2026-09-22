@@ -65,6 +65,9 @@ in {
   "immich.env.age" = {
     publicKeys = users ++ systems;
   };
+  "yt-cookie.txt.age" = {
+    publicKeys = users ++ server;
+  };
   "github-runner.age" = {
     publicKeys = users ++ systems;
   };
