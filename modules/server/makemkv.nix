@@ -32,7 +32,7 @@ in {
             ];
             environment = {
               PUID = "1000";
-              #PGID = "Gruppen-ID-von-media";
+              PGID = "10000";
             };
             extraOptions = [
               "--device=/dev/sr0:/dev/sr0"

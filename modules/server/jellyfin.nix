@@ -92,7 +92,9 @@ in {
       };
       users = {
         groups = {
-          media = {};
+          media = {
+            gid = 10000;
+          };
         };
       };
       environment = {
@@ -147,7 +149,9 @@ in {
       };
       users = {
         groups = {
-          media = {};
+          media = {
+            gid = 10000;
+          };
         };
       };
       programs = {
