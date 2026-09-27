@@ -39,6 +39,19 @@ in {
               "--privileged"
             ];
           };
+          arm = {
+            image = "automaticrippingmachine/automatic-ripping-machine:latest";
+            ports = ["0.0.0.0:8080:8988"];
+            volumes = [
+              "/var/lib/arm/config:/etc/arm/config"
+              "/var/lib/arm/raw:/var/lib/arm/raw"
+              "/var/lib/arm/media:/var/lib/arm/media"
+            ];
+            extraOptions = [
+              "--device=/dev/sr0:/dev/sr0"
+              "--privileged"
+            ];
+          };
         };
       };
     };

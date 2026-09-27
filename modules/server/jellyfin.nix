@@ -40,7 +40,7 @@
     rm -r "$SOURCE_PATH"
   '';
   playlists = {
-    "Frankfurt Tinder - Zarbex" = "https://www.youtube.com/watch?v=cdWyi0LT8eE&list=PLcngYy02sE9yGTWrY69D8BrH0ImqzE_8m&index=1";
+    "Frankfurt Tinder - Zarbex" = "https://www.youtube.com/results?search_query=frankfurt+tinder+zarbex+playlist";
   };
   localTmpPath = "/tmp/yt-staging";
   basePath = "/mnt/server-data/jellyfin/s3-media/YTSerien";
@@ -135,6 +135,9 @@ in {
           enable = true;
           package = pkgs-unstable.jellyfin;
         };
+        sonarr = {
+          enable = true;
+        };
       };
       programs = {
         fuse = {
@@ -179,9 +182,10 @@ in {
 
             serviceConfig = {
               Type = "notify";
+              ExecStartPre = "-${pkgs.fuse}/bin/fusermount -uz /mnt/server-data/jellyfin/s3-media";
               ExecStart = ''
                 ${pkgs.rclone}/bin/rclone mount garage-s3:jellyfin-bucket /mnt/server-data/jellyfin/s3-media \
-                  --config=${config.age.secrets.rclone-conf.path} \
+                  --config=/run/agenix/rclone-conf \
                   --allow-other \
                   --vfs-cache-mode full \
                   --vfs-cache-max-size 200G \
