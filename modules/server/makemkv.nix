@@ -57,7 +57,7 @@ in {
     users = {
       users = {
         cato = {
-          extraGroups = ["cdrom" "video"];
+          extraGroups = ["cdrom" "video" "media"];
         };
       };
     };
