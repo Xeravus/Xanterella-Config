@@ -48,9 +48,9 @@ in {
     systemd = {
       tmpfiles = {
         rules = [
-          "d /mnt/server-data/arm 0777 root root -"
-          "d /mnt/server-data/arm/home 0777 root root -"
-          "d /mnt/server-data/arm/etc 0777 root root -"
+          "d /mnt/server-data/arm 0777 media media -"
+          "d /mnt/server-data/arm/home 0777 media media -"
+          "d /mnt/server-data/arm/etc 0777 media media -"
         ];
       };
     };
