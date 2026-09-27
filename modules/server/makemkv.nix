@@ -41,7 +41,7 @@ in {
           };
           arm = {
             image = "automaticrippingmachine/automatic-ripping-machine:latest";
-            ports = ["0.0.0.0:8080:8988"];
+            ports = ["0.0.0.0:8988:8080"];
             volumes = [
               "/var/lib/arm/config:/etc/arm/config"
               "/var/lib/arm/raw:/var/lib/arm/raw"
