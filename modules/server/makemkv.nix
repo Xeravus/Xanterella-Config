@@ -31,22 +31,25 @@ in {
               "/mnt/server-data/makemkv/storage:/storage"
             ];
             devices = [
-              "/dev/sr0:/dev/sr0"
-              "/dev/sg0:/dev/sg0"
+              #"/dev/sr0:/dev/sr0"
+              #"/dev/sg0:/dev/sg0"
             ];
             extraOptions = [
-              "--network=host"
-              "--privileged"
+              #"--network=host"
+              #"--privileged"
             ];
           };
           arm = {
             image = "automaticrippingmachine/automatic-ripping-machine:latest";
             ports = ["0.0.0.0:8988:8080"];
             volumes = [
-              "/var/lib/arm/config:/etc/arm/config"
-              "/var/lib/arm/raw:/var/lib/arm/raw"
-              "/var/lib/arm/media:/var/lib/arm/media"
+              "/etc/arm/config:/etc/arm/config"
+              "/mnt/arm-rips:/home/arm/media"
             ];
+            environment = {
+              PUID = "1000";
+              #PGID = "Gruppen-ID-von-media";
+            };
             extraOptions = [
               "--device=/dev/sr0:/dev/sr0"
               "--privileged"

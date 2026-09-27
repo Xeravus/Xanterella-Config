@@ -90,6 +90,11 @@ in {
           };
         };
       };
+      users = {
+        groups = {
+          media = {};
+        };
+      };
       environment = {
         systemPackages = with pkgs-unstable; [
           rclone
@@ -137,6 +142,12 @@ in {
         };
         sonarr = {
           enable = true;
+          group = "media";
+        };
+      };
+      users = {
+        groups = {
+          media = {};
         };
       };
       programs = {
@@ -196,7 +207,9 @@ in {
                   --use-server-modtime \
                   --no-checksum \
                   --buffer-size 0M \
-                  --syslog
+                  --syslog \
+                  --dir-perms=0775 \
+                  --file-perms=0664
               '';
               ExecStop = "${pkgs.fuse}/bin/fusermount -u /mnt/server-data/jellyfin/s3-media";
               Restart = "on-failure";
