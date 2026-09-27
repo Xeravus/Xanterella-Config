@@ -25,7 +25,7 @@ in {
         containers = {
           arm = {
             image = "automaticrippingmachine/automatic-ripping-machine:latest";
-            ports = ["0.0.0.0:8988:8080"];
+            ports = ["0.0.0.0:8080:8080"];
             volumes = [
               "/mnt/server-data/arm/etc:/etc/arm/config"
               "/mnt/server-data/arm/home:/home/arm/media"
