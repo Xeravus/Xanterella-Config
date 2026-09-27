@@ -27,8 +27,8 @@ in {
             image = "automaticrippingmachine/automatic-ripping-machine:latest";
             ports = ["0.0.0.0:8988:8080"];
             volumes = [
-              "/etc/arm/config:/etc/arm/config"
-              "/mnt/server-dat/arm:/home/arm/media"
+              "/mnt/server-data/arm/etc:/etc/arm/config"
+              "/mnt/server-data/arm/home:/home/arm/media"
             ];
             environment = {
               PUID = "1000";
@@ -49,6 +49,8 @@ in {
       tmpfiles = {
         rules = [
           "d /mnt/server-data/arm 0777 root root -"
+          "d /mnt/server-data/arm/home 0777 root root -"
+          "d /mnt/server-data/arm/etc 0777 root root -"
         ];
       };
     };
