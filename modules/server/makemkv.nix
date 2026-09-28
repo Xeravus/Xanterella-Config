@@ -32,7 +32,7 @@ in {
             ];
             environment = {
               PUID = "1000";
-              PGID = "10000";
+              PGID = "988";
             };
             extraOptions = [
               "--device=/dev/sr0:/dev/sr0"
