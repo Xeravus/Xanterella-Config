@@ -22,6 +22,9 @@
       jellyfin = {
         enable = true;
       };
+      arm = {
+        enable = true;
+      };
       ha = {
         enable = true;
       };
