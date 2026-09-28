@@ -20,6 +20,13 @@ in {
         enable = true;
       };
     };
+    users = {
+      groups = {
+        media = {
+          gid = 5000;
+        };
+      };
+    };
     virtualisation = {
       oci-containers = {
         containers = {
@@ -31,8 +38,8 @@ in {
               "/mnt/server-data/arm/home:/home/arm/media"
             ];
             environment = {
-              PUID = "1000";
-              PGID = "988";
+              ARM_UID = "1000";
+              ARM_GID = "5000";
             };
             extraOptions = [
               "--device=/dev/sr0:/dev/sr0"

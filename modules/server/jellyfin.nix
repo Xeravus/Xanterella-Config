@@ -93,7 +93,7 @@ in {
       users = {
         groups = {
           media = {
-            gid = 10000;
+            gid = 5000;
           };
         };
       };
@@ -150,7 +150,7 @@ in {
       users = {
         groups = {
           media = {
-            gid = 10000;
+            gid = 5000;
           };
         };
       };
