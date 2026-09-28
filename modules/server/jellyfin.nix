@@ -252,7 +252,7 @@ in {
               ports = ["0.0.0.0:8080:8080"];
               volumes = [
                 "${armMediaDir}/etc:/etc/arm/config"
-                "${armMediaDir}/home:/home/arm/media"
+                "${armMediaDir}/home:/home/arm"
               ];
               environment = {
                 ARM_UID = armUid;
