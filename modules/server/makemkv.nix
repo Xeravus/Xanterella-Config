@@ -1,10 +1,14 @@
 {
+  pkgs,
   config,
   lib,
   ...
 }: let
   cfg = config.xanterella.makemkv;
   nodeCfg = config.xanterella.cluster-node;
+  armUid = "1100";
+  armGid = "5500";
+  armMediaDir = "/mnt/server-data/arm";
 in {
   options = {
     xanterella = {
@@ -20,13 +24,6 @@ in {
         enable = true;
       };
     };
-    users = {
-      groups = {
-        media = {
-          gid = 5000;
-        };
-      };
-    };
     virtualisation = {
       oci-containers = {
         containers = {
@@ -34,12 +31,12 @@ in {
             image = "automaticrippingmachine/automatic-ripping-machine:latest";
             ports = ["0.0.0.0:8080:8080"];
             volumes = [
-              "/mnt/server-data/arm/etc:/etc/arm/config"
-              "/mnt/server-data/arm/home:/home/arm/media"
+              "${armMediaDir}/etc:/etc/arm/config"
+              "${armMediaDir}/home:/home/arm/media"
             ];
             environment = {
-              ARM_UID = "1000";
-              ARM_GID = "5000";
+              ARM_UID = "1100";
+              ARM_GID = "5500";
             };
             extraOptions = [
               "--device=/dev/sr0:/dev/sr0"
@@ -55,17 +52,30 @@ in {
     systemd = {
       tmpfiles = {
         rules = [
-          "d /mnt/server-data/arm 0775 1000 5000 -"
-          "d /mnt/server-data/arm/etc 0775 1000 5000 -"
-          "d /mnt/server-data/arm/home 0775 1000 5000 -"
-          "Z /mnt/server-data/arm 0775 1000 5000 -"
+          "d ${armMediaDir} 0775 ${armUid} ${armGid} -"
+          "d ${armMediaDir}/etc 0775 ${armUid} ${armGid} -"
+          "d ${armMediaDir}/home 0775 ${armUid} ${armGid} -"
+          "Z ${armMediaDir} 0775 ${armUid} ${armGid} -"
         ];
+      };
+      services = {
+        "podman-arm" = {
+          preStart = ''
+            ${pkgs.coreutils}/bin/chown -R ${armUid}:${armGid} ${armMediaDir}
+            ${pkgs.coreutils}/bin/chmod -R 775 ${armMediaDir}
+          '';
+        };
       };
     };
     users = {
       users = {
         cato = {
           extraGroups = ["cdrom" "video" "media"];
+        };
+      };
+      groups = {
+        arm-media = {
+          gid = lib.toInt armGid;
         };
       };
     };
