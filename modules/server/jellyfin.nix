@@ -159,6 +159,10 @@ in {
           enable = true;
           group = "media";
         };
+        radarr = {
+          enable = true;
+          group = "media";
+        };
       };
       programs = {
         fuse = {
