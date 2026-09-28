@@ -22,9 +22,6 @@
       jellyfin = {
         enable = true;
       };
-      makemkv = {
-        enable = true;
-      };
       ha = {
         enable = true;
       };

@@ -3,7 +3,6 @@
     ./paperlessngx.nix
     ./minecraft-server.nix
     ./arcane.nix
-    ./makemkv.nix
     ./home-assistant.nix
     ./jellyfin.nix
     ./livesync.nix

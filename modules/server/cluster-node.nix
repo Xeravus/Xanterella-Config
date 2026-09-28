@@ -37,9 +37,6 @@ in {
         arcane-agent = {
           enable = true;
         };
-        makemkv = {
-          enable = true;
-        };
       };
       networking = {
         firewall = {
