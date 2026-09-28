@@ -55,9 +55,10 @@ in {
     systemd = {
       tmpfiles = {
         rules = [
-          "d /mnt/server-data/arm 0775 cato media -"
-          "d /mnt/server-data/arm/home 0775 cato media -"
-          "d /mnt/server-data/arm/etc 0775 cato media -"
+          "d /mnt/server-data/arm 0775 1000 5000 -"
+          "d /mnt/server-data/arm/etc 0775 1000 5000 -"
+          "d /mnt/server-data/arm/home 0775 1000 5000 -"
+          "Z /mnt/server-data/arm 0775 1000 5000 -"
         ];
       };
     };
