@@ -8,7 +8,7 @@
   cfg = config.xanterella.jellyfin;
   nodeCfg = config.xanterella.cluster-node;
   armUid = "1100";
-  armGid = "5500";
+  armGid = "5000";
   armMediaDir = "/mnt/server-data/arm";
   remount = pkgs.writeShellScriptBin "s3remount" ''
     echo "Stoppe rclone-Dienst..."
@@ -255,8 +255,8 @@ in {
                 "${armMediaDir}/home:/home/arm/media"
               ];
               environment = {
-                ARM_UID = "1100";
-                ARM_GID = "5500";
+                ARM_UID = armUid;
+                ARM_GID = armGid;
               };
               extraOptions = [
                 "--device=/dev/sr0:/dev/sr0"
