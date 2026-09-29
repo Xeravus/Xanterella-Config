@@ -270,6 +270,7 @@ in {
               extraOptions = [
                 "--device=/dev/sr0:/dev/sr0"
                 "--privileged"
+                "--network=host"
               ];
             };
           };
