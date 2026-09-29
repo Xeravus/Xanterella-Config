@@ -32,7 +32,7 @@
 
     SOURCE_PATH="$1"
     FOLDER_NAME=$(basename "$SOURCE_PATH")
-    BUCKET_DEST="garage-s3:jellyfin-bucket/Movies"
+    BUCKET_DEST="garage-s3:jellyfin/Movies"
     RCLONE_CONF="/run/agenix/rclone-conf"
     sudo rclone move "$SOURCE_PATH" "$BUCKET_DEST/$FOLDER_NAME" \
       --config "$RCLONE_CONF" \
@@ -214,7 +214,7 @@ in {
               Type = "notify";
               ExecStartPre = "-${pkgs.fuse}/bin/fusermount -uz /mnt/server-data/jellyfin/s3-media";
               ExecStart = ''
-                ${pkgs.rclone}/bin/rclone mount garage-s3:jellyfin-bucket /mnt/server-data/jellyfin/s3-media \
+                ${pkgs.rclone}/bin/rclone mount garage-s3:jellyfin /mnt/server-data/jellyfin/s3-media \
                   --config=/run/agenix/rclone-conf \
                   --allow-other \
                   --vfs-cache-mode full \
