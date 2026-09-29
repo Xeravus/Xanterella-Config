@@ -258,7 +258,7 @@ in {
           containers = {
             arm = {
               image = "automaticrippingmachine/automatic-ripping-machine:latest";
-              ports = ["0.0.0.0:8987:8080"];
+              #ports = ["0.0.0.0:8987:8080"];
               volumes = [
                 "${armMediaDir}/etc:/etc/arm/config"
                 "${armMediaDir}/home:/home/arm"
@@ -304,6 +304,7 @@ in {
           };
         };
       };
+      networking.firewall.allowedTCPPorts = [8080];
     })
   ];
 }
