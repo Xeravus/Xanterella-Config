@@ -2,11 +2,11 @@
   config,
   pkgs,
   lib,
-  pkgs-new,
+  pkgs-unstable,
   inputs,
   ...
 }: let
-  pomo = pkgs-new.buildGoModule {
+  pomo = pkgs-unstable.buildGoModule {
     pname = "pomo";
     version = "latest";
     src = inputs.pomo-src;

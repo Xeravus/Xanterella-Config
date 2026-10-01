@@ -50,7 +50,7 @@ in {
     })
     (lib.mkIf config.xanterella.tailscale-crylia.enable {
       environment = {
-        systemPackages = with inputs.pkgs-bleeding; [
+        systemPackages = with pkgs-bleeding; [
           tailscale
         ];
       };
@@ -81,7 +81,7 @@ in {
     })
     (lib.mkIf config.xanterella.tailscale-installer.enable {
       environment = {
-        systemPackages = with inputs.pkgs-bleeding; [
+        systemPackages = with pkgs-bleeding; [
           tailscale
         ];
         etc = {

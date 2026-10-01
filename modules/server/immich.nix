@@ -37,6 +37,7 @@ in {
           defaultNetwork = {
             settings = {
               dns_enabled = true;
+              nameservers = ["100.100.100.100" "1.1.1.1"];
             };
           };
         };

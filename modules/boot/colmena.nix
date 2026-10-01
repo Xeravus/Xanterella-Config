@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  pkgs-new,
+  pkgs-unstable,
   ...
 }: {
   options = {
@@ -15,7 +15,7 @@
 
   config = lib.mkIf config.xanterella.colmena.enable {
     environment = {
-      systemPackages = with pkgs-new; [
+      systemPackages = with pkgs-unstable; [
         colmena
         nix-output-monitor
       ];

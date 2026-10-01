@@ -16,4 +16,8 @@ in {
   isoImage = {
     squashfsCompression = "zstd";
   };
+  networking = {
+    hostName = "cyros";
+  };
+  nixpkgs.config.allowUnfree = true;
 }

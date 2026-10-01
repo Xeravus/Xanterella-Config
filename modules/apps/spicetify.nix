@@ -3,7 +3,6 @@
   pkgs,
   lib,
   inputs,
-  pkgs-new,
   pkgs-unstable,
   ...
 }: let
@@ -39,7 +38,7 @@ in {
   config = lib.mkIf config.xanterella.spicetify.enable {
     environment = {
       systemPackages = [
-        pkgs-new.spotify-player
+        pkgs-unstable.spotify-player
         pkgs.sptlrx
         (lib.hiPrio (pkgs.makeDesktopItem {
           name = "spotify";
