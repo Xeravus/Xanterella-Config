@@ -254,6 +254,15 @@ in {
         };
       };
       virtualisation = {
+        podman = {
+          enable = true;
+          defaultNetwork = {
+            settings = {
+              dns_enabled = true;
+              nameservers = ["100.100.100.100"];
+            };
+          };
+        };
         oci-containers = {
           containers = {
             arm = {
