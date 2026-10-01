@@ -1,5 +1,6 @@
 {
   pkgs-unstable,
+  pkgs-bleeding,
   config,
   lib,
   pkgs,
@@ -153,7 +154,7 @@ in {
       services = {
         jellyfin = {
           enable = true;
-          package = pkgs-unstable.jellyfin;
+          package = pkgs-bleeding.jellyfin;
         };
         sonarr = {
           enable = true;
