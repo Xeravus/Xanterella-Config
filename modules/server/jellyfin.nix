@@ -52,20 +52,20 @@
     mkdir -p "${localTmpPath}"
 
     ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: url: ''
-                echo "Synchronisiere Playlist: ${name}"
-                mkdir -p "${basePath}/${name} (2026)/Season 01"
+        echo "Synchronisiere Playlist: ${name}"
+        mkdir -p "${basePath}/${name} (2026)/Season 01"
 
         ${pkgs-unstable.yt-dlp}/bin/yt-dlp \
-                --cookies ${config.age.secrets.yt-cookie.path} \
-                --download-archive "${basePath}/${name} (2026)/archive.txt" \
-                --format "bestvideo+bestaudio/best" \
-                --merge-output-format mkv \
-                --write-thumbnail \
-                --output "${localTmpPath}/${name} - S01E%(playlist_index)02d - %(title)s.%(ext)s" \
-                "${url}"
+        --cookies ${config.age.secrets.yt-cookie.path} \
+        --download-archive "${basePath}/${name} (2026)/archive.txt" \
+        --format "bestvideo+bestaudio/best" \
+        --merge-output-format mkv \
+        --write-thumbnail \
+        --output "${localTmpPath}/${name} - S01E%(playlist_index)02d - %(title)s.%(ext)s" \
+        "${url}"
 
-                echo "Verschiebe fertige Dateien nach S3..."
-                mv ${localTmpPath}/*.* "${basePath}/${name} (2026)/Season 01/" 2>/dev/null || true
+        echo "Verschiebe fertige Dateien nach S3..."
+        mv ${localTmpPath}/*.* "${basePath}/${name} (2026)/Season 01/" 2>/dev/null || true
       '')
       playlists)}
 
