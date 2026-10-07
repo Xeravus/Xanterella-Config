@@ -9,6 +9,8 @@
 
     ./hardware-configuration.nix
 
+    ./hardware-configuration.nix
+
     ./../../modules
     ./../../profiles/boot/boot-crylia.nix
     ./../../profiles/essentials/essentials-crylia.nix
