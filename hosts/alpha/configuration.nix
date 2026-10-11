@@ -9,10 +9,10 @@
     ./../../modules
     ./../../profiles/boot/boot-server.nix
     ./../../profiles/server/headless.nix
-    ./../../profiles/apps/swetik-apps.nix
+    ./../../profiles/apps/alpha-apps.nix
   ];
   networking = {
-    hostName = "swetik";
+    hostName = "alpha";
   };
   system = {
     stateVersion = "26.05";

@@ -118,8 +118,9 @@ in {
             cat = "bat";
             thm = "sudo openvpn ~/tryhackme/VPN/tryhackme.ovpn";
 
-            lutik = "ssh cato@lutik";
-            swetik = "ssh cato@swetik";
+            alpha = "ssh cato@alpha";
+            beta = "ssh cato@beta";
+            gamma = "ssh cato@lacrux";
           };
 
           interactiveShellInit = "";

@@ -49,7 +49,7 @@
             ./../hosts/xeravus/configuration.nix
           ];
         });
-      swetik = withSystem "x86_64-linux" ({
+      beta = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
         pkgs-bleeding,
@@ -65,7 +65,7 @@
           };
           modules = [
             inputs.disko.nixosModules.disko
-            ./../hosts/swetik/configuration.nix
+            ./../hosts/beta/configuration.nix
           ];
         });
       xorus = withSystem "x86_64-linux" ({

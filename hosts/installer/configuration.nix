@@ -9,15 +9,15 @@
 in {
   imports = [
     ./../../modules
-    ./../../profiles/installer.nix
     ./../../profiles/desktops/gnome.nix
+    ./../../profiles/apps/installer-apps.nix
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
   ];
   isoImage = {
     squashfsCompression = "zstd";
   };
   networking = {
-    hostName = "cyros";
+    hostName = "installer";
   };
   nixpkgs.config.allowUnfree = true;
 }

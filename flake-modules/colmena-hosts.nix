@@ -45,15 +45,15 @@
       ./../profiles/ssh-keys.nix
     ];
   };
-  swetik = {
+  beta = {
     deployment = {
-      targetHost = "swetik";
+      targetHost = "beta";
       targetUser = taruser;
       buildOnTarget = false;
       keys = commonSSHKeys;
     };
     imports = [
-      ./../hosts/swetik/configuration.nix
+      ./../hosts/beta/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
   };
@@ -69,15 +69,15 @@
       ./../profiles/ssh-keys.nix
     ];
   };
-  lutik = {
+  alpha = {
     deployment = {
-      targetHost = "lutik";
+      targetHost = "alpha";
       targetUser = taruser;
       buildOnTarget = false;
       keys = commonSSHKeys;
     };
     imports = [
-      ./../hosts/lutik/configuration.nix
+      ./../hosts/alpha/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
   };

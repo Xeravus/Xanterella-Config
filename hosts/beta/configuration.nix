@@ -9,10 +9,10 @@
     ./../../modules
     ./../../profiles/boot/boot-server.nix
     ./../../profiles/server/headless.nix
-    ./../../profiles/apps/lutik-apps.nix
+    ./../../profiles/apps/beta-apps.nix
   ];
   networking = {
-    hostName = "lutik";
+    hostName = "beta";
   };
   system = {
     stateVersion = "26.05";

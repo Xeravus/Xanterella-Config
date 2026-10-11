@@ -134,7 +134,7 @@ in {
       caddy = {
         enable = true;
         virtualHosts = {
-          "https://lutik.gute-nessie.ts.net" = {
+          "https://alpha.gute-nessie.ts.net" = {
             extraConfig = ''
               handle /_matrix* {
               reverse_proxy 127.0.0.1:8008

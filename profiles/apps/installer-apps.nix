@@ -23,7 +23,10 @@
       kitty = {
         enable = true;
       };
-      bash = {
+      zsh = {
+        enable = true;
+      };
+      btop = {
         enable = true;
       };
     };

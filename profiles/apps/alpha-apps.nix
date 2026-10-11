@@ -46,7 +46,7 @@
       };
       immich = {
         enable = true;
-        ml-domain = "swetik.gute-nessie.ts.net";
+        ml-domain = "beta.gute-nessie.ts.net";
       };
       prometheus = {
         enable = true;
