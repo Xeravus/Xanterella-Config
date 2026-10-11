@@ -17,6 +17,9 @@
       git = {
         enable = true;
       };
+      kitty = {
+        enable = true;
+      };
       local = {
         enable = true;
       };
