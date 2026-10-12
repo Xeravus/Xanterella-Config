@@ -57,9 +57,9 @@
       ./../profiles/ssh-keys.nix
     ];
   };
-  xorus = {
+  omega = {
     deployment = {
-      targetHost = "192.168.178.69";
+      targetHost = "omega";
       targetUser = taruser;
       buildOnTarget = false;
       keys = commonSSHKeys;
