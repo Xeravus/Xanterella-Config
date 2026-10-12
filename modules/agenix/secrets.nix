@@ -35,10 +35,10 @@ in {
   "couchdb.env.age" = {
     publicKeys = users ++ server;
   };
-  "arcane-token-lutik.env.age" = {
+  "arcane-token-alpha.env.age" = {
     publicKeys = users ++ server;
   };
-  "arcane-token-swetik.env.age" = {
+  "arcane-token-beta.env.age" = {
     publicKeys = users ++ server;
   };
   "rclone.conf.age" = {
