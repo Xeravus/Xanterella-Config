@@ -1,8 +1,8 @@
-{
+{lib, ...}: {
   disko.devices = {
     disk = {
       main = {
-        device = "/dev/sda";
+        device = lib.mkForce "/dev/sda";
         type = "disk";
         content = {
           type = "gpt";
