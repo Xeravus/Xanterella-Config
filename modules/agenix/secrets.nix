@@ -7,6 +7,9 @@ let
   xeravus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzkvv1qjg8y//HRhcyEoZ7luoVhBNgqvJ1HIzceAVu1";
   alpha = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFxZS/IOSqNcBYlg1oCDUIzqURCiNoQTmdXXQKcSfMpY";
   beta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIKI1mJ/Bawht6CD7Z745X8oOD4vD0xJy+y8bNSZda5x";
+  delta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOCigT6D7osMF2hsEmha+SMBmAf0WPUGUcVUVDd4axd2";
+  epsilon = "";
+  zeta = "";
   omega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILRuBimJgERluZGC7Jo1cd/DODfgiFJ6C8ScosEfgLEk";
   systems = [
     xeravus
