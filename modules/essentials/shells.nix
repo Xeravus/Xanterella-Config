@@ -121,6 +121,9 @@ in {
             alpha = "ssh cato@alpha";
             beta = "ssh cato@beta";
             gamma = "ssh cato@lacrux";
+            delta = "ssh cato@delta";
+            epsilon = "ssh cato@epsilon";
+            zeta = "ssh cato@zeta";
           };
 
           interactiveShellInit = "";
