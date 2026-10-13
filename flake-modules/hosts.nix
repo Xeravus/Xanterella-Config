@@ -68,6 +68,63 @@
             ./../hosts/beta/configuration.nix
           ];
         });
+      delta = withSystem "x86_64-linux" ({
+        pkgs-new,
+        pkgs-unstable,
+        pkgs-bleeding,
+        ...
+      }:
+        inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inputs = inputs;
+            pkgs-new = pkgs-new;
+            pkgs-unstable = pkgs-unstable;
+            pkgs-bleeding = pkgs-bleeding;
+          };
+          modules = [
+            inputs.disko.nixosModules.disko
+            ./../hosts/delta/configuration.nix
+          ];
+        });
+      epsilon = withSystem "x86_64-linux" ({
+        pkgs-new,
+        pkgs-unstable,
+        pkgs-bleeding,
+        ...
+      }:
+        inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inputs = inputs;
+            pkgs-new = pkgs-new;
+            pkgs-unstable = pkgs-unstable;
+            pkgs-bleeding = pkgs-bleeding;
+          };
+          modules = [
+            inputs.disko.nixosModules.disko
+            ./../hosts/epsilon/configuration.nix
+          ];
+        });
+      zeta = withSystem "x86_64-linux" ({
+        pkgs-new,
+        pkgs-unstable,
+        pkgs-bleeding,
+        ...
+      }:
+        inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inputs = inputs;
+            pkgs-new = pkgs-new;
+            pkgs-unstable = pkgs-unstable;
+            pkgs-bleeding = pkgs-bleeding;
+          };
+          modules = [
+            inputs.disko.nixosModules.disko
+            ./../hosts/zeta/configuration.nix
+          ];
+        });
       xorus = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
