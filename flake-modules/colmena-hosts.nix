@@ -89,6 +89,7 @@
       keys = commonSSHKeys;
     };
     imports = [
+      inputs.disko.nixosModules.disko
       ./../hosts/alpha/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
@@ -101,6 +102,7 @@
       keys = commonSSHKeys;
     };
     imports = [
+      inputs.disko.nixosModules.disko
       ./../hosts/epsilon/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
@@ -113,6 +115,7 @@
       keys = commonSSHKeys;
     };
     imports = [
+      inputs.disko.nixosModules.disko
       ./../hosts/zeta/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
