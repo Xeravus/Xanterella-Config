@@ -66,6 +66,7 @@
           modules = [
             inputs.disko.nixosModules.disko
             ./../hosts/beta/configuration.nix
+            ./../profiles/ssh-keys.nix
           ];
         });
       delta = withSystem "x86_64-linux" ({
@@ -85,6 +86,7 @@
           modules = [
             inputs.disko.nixosModules.disko
             ./../hosts/delta/configuration.nix
+            ./../profiles/ssh-keys.nix
           ];
         });
       epsilon = withSystem "x86_64-linux" ({
@@ -104,6 +106,7 @@
           modules = [
             inputs.disko.nixosModules.disko
             ./../hosts/epsilon/configuration.nix
+            ./../profiles/ssh-keys.nix
           ];
         });
       zeta = withSystem "x86_64-linux" ({
@@ -123,6 +126,7 @@
           modules = [
             inputs.disko.nixosModules.disko
             ./../hosts/zeta/configuration.nix
+            ./../profiles/ssh-keys.nix
           ];
         });
       xorus = withSystem "x86_64-linux" ({
@@ -142,6 +146,7 @@
           modules = [
             inputs.disko.nixosModules.disko
             ./../hosts/xorus/configuration.nix
+            ./../profiles/ssh-keys.nix
           ];
         });
       installer = withSystem "x86_64-linux" ({

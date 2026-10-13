@@ -81,4 +81,40 @@
       ./../profiles/ssh-keys.nix
     ];
   };
+  delta = {
+    deployment = {
+      targetHost = "delta";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      ./../hosts/alpha/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
+  epsilon = {
+    deployment = {
+      targetHost = "epsilon";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      ./../hosts/epsilon/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
+  zeta = {
+    deployment = {
+      targetHost = "zeta";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      ./../hosts/zeta/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
 }
