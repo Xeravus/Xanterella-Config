@@ -10,7 +10,6 @@
     ./../../profiles/boot/boot-server.nix
     ./../../profiles/server/headless.nix
     ./../../profiles/apps/delta-apps.nix
-    ./disko-config.nix
   ];
   networking = {
     hostName = "delta";
