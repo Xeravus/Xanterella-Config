@@ -64,9 +64,6 @@
     services = {
       xserver = {
         enable = true;
-        libinput = {
-          enable = true;
-        };
         xkb = {
           layout = "de";
           variant = "";
