@@ -33,8 +33,6 @@
     source ${p10kConf}
     ${yaziFunc}
 
-    eval "$(zoxide init zsh)"
-
     (( ! ''${+functions[p10k]} )) || p10k finalize
   '';
 in {
@@ -97,7 +95,6 @@ in {
           shellAliases = {
             l = "eza -lha";
             ls = "eza";
-            z = "zoxide";
             cl = "clear";
             f = "fastfetch";
             v = "nvim";
