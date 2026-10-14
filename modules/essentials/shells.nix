@@ -124,8 +124,6 @@ in {
             delta = "ssh cato@delta";
             epsilon = "ssh cato@epsilon";
             zeta = "ssh cato@zeta";
-
-            dev = "cd ~/xanterella/cli/xanterella && tmux new-session -A -s coding && tmux rename-window nvim && tmux new-window && tmux rename-window check && tmux display-message finish";
           };
 
           interactiveShellInit = "";

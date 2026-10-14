@@ -35,6 +35,31 @@
     include ~/.config/kitty/themes/noctalia.conf
   '';
 
+  dev = pkgs.writeShellScriptBin "dev" ''
+    cd xanterella/cli/xanterella
+
+    tmux new-session -d -s "coding"
+    tmux rename-window "nvim"
+    tmux send-keys -t 0 "v" Enter
+
+    tmux new-window -n "check"
+    tmux send-keys -t 1 "cargo check"
+
+    tmux new-window -n "run"
+    tmux split-window -h -p 30
+    tmux select-pane -t 0
+
+    tmux new-window -n "prolyxena"
+    tmux send-keys -t 3 "cd ../prolyxena & v" Enter
+
+    tmux new-window -n "config"
+    tmux send-keys -t 4 "cd ../../config & v" Enter
+    tmux select-pane -t 0
+
+    tmux select-window -t "coding:nvim"
+    tmux attach-session -d
+  '';
+
   kittywrapped = pkgs.symlinkJoin {
     name = "kitty-wrapped";
     paths = [
@@ -61,6 +86,7 @@ in {
         kittywrapped
         pkgs.tmux
         pkgs.kitty-themes
+        dev
       ];
     };
     programs = {
