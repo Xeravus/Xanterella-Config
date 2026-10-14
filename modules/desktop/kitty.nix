@@ -46,9 +46,9 @@
     tmux send-keys -t 1 "cargo check"
 
     tmux new-window -n "run"
-    tmux send-keys -t 1 "cargo run"
+    tmux send-keys -t 2 "cargo run"
     tmux split-window -h -p 30
-    tmux send-keys -t 1 "curl 127.0.0.1/clear && echo \"\n\" && curl 127.0.0.1/extract"
+    tmux send-keys -t 2 "curl 127.0.0.1/clear && echo \"\n\" && curl 127.0.0.1/extract"
     tmux select-pane -t 0
 
     tmux new-window -n "prolyxena"
