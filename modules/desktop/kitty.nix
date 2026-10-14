@@ -67,6 +67,7 @@ in {
       tmux = {
         clock24 = true;
         keyMode = "vi";
+        baseIndex = 1;
       };
     };
   };
