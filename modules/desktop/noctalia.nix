@@ -32,6 +32,7 @@ in {
       systemPackages = [
         inputs.noctalia.packages.${pkgs.system}.default
         pkgs.nix-search-tv
+        pkgs.fzf
       ];
     };
     systemd = {
