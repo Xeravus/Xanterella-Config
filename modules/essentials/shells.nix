@@ -29,18 +29,12 @@
       source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
     fi
 
-    eval "$(zoxide init zsh)"
-
-    # 2. Theme laden (direkt aus den Flake Inputs)
     source ${inputs.p10k-src}/powerlevel10k.zsh-theme
-
-    # 3. Config laden
     source ${p10kConf}
-
-    # 4. Yazi anhängen
     ${yaziFunc}
 
-    # 5. Sauberer Abschluss (Exakt am Ende der Datei, genau wie P10k es verlangt!)
+    eval "$(zoxide init zsh)"
+
     (( ! ''${+functions[p10k]} )) || p10k finalize
   '';
 in {
