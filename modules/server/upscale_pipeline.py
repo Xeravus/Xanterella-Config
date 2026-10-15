@@ -64,23 +64,19 @@ def get_tag_id(session: requests.Session, tag_name: str) -> str:
     return None
 
 def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
-    """Sucht über die Immich Search-API nach Assets mit dem spezifischen Tag."""
+    """Holt Assets über die Immich API und filtert lokal nach dem Tag."""
     logger.info(f"Suche nach Assets mit dem Tag: {TARGET_TAG} ...")
     
     # 1. UUID des Tags herausfinden
     tag_id = get_tag_id(session, TARGET_TAG)
-    
-    payload = {"withExif": True}
-    
-    # Wenn wir die Tag-ID gefunden haben, weisen wir die API an, 
-    # NUR Bilder mit diesem Tag zurückzugeben.
     if tag_id:
-        logger.info(f"Tag-UUID gefunden: {tag_id}. Filtere API...")
-        payload["tagIds"] = [tag_id]
+        logger.info(f"Tag-UUID gefunden: {tag_id}. Lade Assets zum lokalen Filtern...")
     else:
         logger.warning(f"Tag '{TARGET_TAG}' in Immich nicht gefunden! Suche nach Beschreibungs-Fallback...")
 
-    # 2. Assets bei der API anfragen
+    # 2. Assets bei der API anfragen (OHNE tagIds im Payload, um API-Fehler zu vermeiden)
+    payload = {"withExif": True}
+    
     url = f"{IMMICH_URL}/search/metadata"
     resp = session.post(url, json=payload)
     if resp.status_code == 404:
@@ -97,7 +93,7 @@ def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
         
     tagged_assets = []
     
-    # 3. Assets auswerten
+    # 3. Assets lokal durchsuchen
     for asset in all_assets:
         # Falls die API nur ID-Strings zurückgibt, volles Objekt nachladen
         if isinstance(asset, str):
@@ -114,21 +110,33 @@ def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
         if not isinstance(asset, dict):
             continue
 
-        # Wenn wir über die tagIds (UUID) gefiltert haben, ist das Asset bereits 100% korrekt.
+        has_target_tag = False
+
+        # Prüfe native Immich-Tags auf dem Asset
         if tag_id:
-            tagged_assets.append(asset)
-            continue
+            # asset.get("tags") enthält meist eine Liste von Dictionaries, z.B. [{"id": "uuid", "name": "tag"}]
+            asset_tags = asset.get("tags", [])
+            for t in asset_tags:
+                if isinstance(t, dict) and t.get("id") == tag_id:
+                    has_target_tag = True
+                    break
+                elif isinstance(t, str) and t == tag_id:
+                    has_target_tag = True
+                    break
+                    
+        # Fallback auf Beschreibung / EXIF (für alte Versionen)
+        if not has_target_tag:
+            exif_info = asset.get("exifInfo") or {}
+            description = exif_info.get("description") or ""
+            exif_tags = exif_info.get("tags") or []
             
-        # Fallback: Nur falls der offizielle Tag (noch) nicht gefunden wurde, 
-        # suchen wir weiterhin klassisch im Beschreibungstext
-        exif_info = asset.get("exifInfo") or {}
-        description = exif_info.get("description") or ""
-        exif_tags = exif_info.get("tags") or []
-        
-        if not isinstance(description, str): description = ""
-        if not isinstance(exif_tags, list): exif_tags = []
-        
-        if TARGET_TAG.lower() in description.lower() or TARGET_TAG in exif_tags:
+            if not isinstance(description, str): description = ""
+            if not isinstance(exif_tags, list): exif_tags = []
+            
+            if TARGET_TAG.lower() in description.lower() or TARGET_TAG in exif_tags:
+                has_target_tag = True
+                
+        if has_target_tag:
             tagged_assets.append(asset)
             
     logger.info(f"{len(tagged_assets)} Assets mit dem Tag '{TARGET_TAG}' gefunden.")
