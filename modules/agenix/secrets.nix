@@ -71,6 +71,9 @@ in {
   "immich.env.age" = {
     publicKeys = users ++ systems;
   };
+  "immich-api-key.age" = {
+    publicKeys = users ++ server;
+  };
   "yt-cookie.txt.age" = {
     publicKeys = users ++ server;
   };

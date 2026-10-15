@@ -1,12 +1,18 @@
 {
   config,
   pkgs-new,
+  pkgs-unstable,
+  pkgs,
   lib,
   ...
 }: let
   cfg = config.xanterella.immich;
   cfg-ml = config.xanterella.immich-ml;
   nodeCfg = config.xanterella.cluster-node;
+  upscaleScript = pkgs.writeScriptBin "immich-upscaler" ''
+    #!${pkgs.python3.withPackages (ps: [ps.requests])}/bin/python3
+    ${builtins.readFile ./upscale_pipeline.py}
+  '';
 in {
   options = {
     xanterella = {
@@ -57,7 +63,7 @@ in {
               volumes = ["/mnt/server-data/immich/db:/var/lib/postgresql/data"];
             };
             immich-server = {
-              image = "ghcr.io/immich-app/immich-server:v3.3.1";
+              image = "ghcr.io/immich-app/immich-server:v3.3.3";
               dependsOn = ["immich-postgres" "immich-redis"];
               ports = [
                 "0.0.0.0:2283:2283"
@@ -101,7 +107,18 @@ in {
           immich-env = {
             file = ./../agenix/immich.env.age;
           };
+          immich-api-key = {
+            file = ./../agenix/immich-api-key.age;
+            owner = "immich-upscaler";
+            group = "immich-upscaler";
+            mode = "0400";
+          };
         };
+      };
+      environment = {
+        systemPackages = with pkgs-unstable; [
+          realesrgan-ncnn-vulkan
+        ];
       };
       virtualisation = {
         podman = {
@@ -137,6 +154,65 @@ in {
         };
       };
       networking.firewall.allowedTCPPorts = [3003];
+
+      users = {
+        users = {
+          immich-upscaler = {
+            isSystemUser = true;
+            group = "immich-upscaler";
+            description = "Service user for Immich AI Upscaling Pipeline";
+          };
+        };
+        groups = {
+          immich-upscaler = {};
+        };
+      };
+
+      systemd = {
+        services = {
+          immich-upscale = {
+            description = "Immich AI Upscaling Pipeline";
+            after = ["network-online.target"];
+            wants = ["network-online.target"];
+
+            environment = {
+              IMMICH_URL = "https://immich.xanterella.de/api";
+              # Das Skript liest den Key aus dieser Datei (von Agenix bereitgestellt)
+              IMMICH_API_KEY_FILE = config.age.secrets.immich-api-key.path;
+              # Der Tag, nach dem in der Beschreibung gesucht wird
+              IMMICH_TARGET_TAG = "#upscale";
+
+              UPSCALER_CMD = "${pkgs-unstable.realesrgan-ncnn-vulkan}/bin/realesrgan-ncnn-vulkan -i {input} -o {output} -n realesrgan-x4plus";
+              TMP_DIR = "/tmp/immich_upscale";
+              STATE_FILE = "/var/lib/immich-upscale/processed.json";
+            };
+
+            serviceConfig = {
+              Type = "oneshot";
+              ExecStart = "${upscaleScript}/bin/immich-upscaler";
+              User = "immich-upscaler";
+              Group = "immich-upscaler";
+
+              StateDirectory = "immich-upscale";
+              PrivateTmp = true;
+              ProtectSystem = "strict";
+              ProtectHome = true;
+              NoNewPrivileges = true;
+            };
+          };
+        };
+
+        timers = {
+          immich-upscale = {
+            description = "Run Immich Upscaling Pipeline";
+            wantedBy = ["timers.target"];
+            timerConfig = {
+              OnCalendar = "hourly";
+              Persistent = true;
+            };
+          };
+        };
+      };
     })
   ];
 }
