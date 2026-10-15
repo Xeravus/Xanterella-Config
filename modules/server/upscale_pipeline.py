@@ -47,68 +47,86 @@ def save_state(processed_ids: List[str]):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps(processed_ids))
 
+def get_tag_id(session: requests.Session, tag_name: str) -> str:
+    """Holt die interne UUID des Immich-Tags basierend auf seinem Namen."""
+    url = f"{IMMICH_URL}/tags"
+    resp = session.get(url)
+    if resp.status_code != 200:
+        logger.warning(f"Konnte Tag-Liste nicht laden: {resp.status_code}")
+        return None
+        
+    tags = resp.json()
+    for tag in tags:
+        # Checkt sowohl name als auch value, falls das # Zeichen weggelassen wurde
+        if tag.get("name", "").lower() == tag_name.lower() or tag.get("value", "").lower() == tag_name.lower():
+            return tag.get("id")
+            
+    return None
+
 def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
-    """
-    Sucht nach Assets, die den TARGET_TAG in der Beschreibung haben.
-    Nutzt die moderne POST-Search-API für Immich v3+.
-    """
+    """Sucht über die Immich Search-API nach Assets mit dem spezifischen Tag."""
     logger.info(f"Suche nach Assets mit dem Tag: {TARGET_TAG} ...")
     
-    # In neueren Immich Versionen nutzen wir den Search-Metadata Endpoint
+    # 1. UUID des Tags herausfinden
+    tag_id = get_tag_id(session, TARGET_TAG)
+    
+    payload = {"withExif": True}
+    
+    # Wenn wir die Tag-ID gefunden haben, weisen wir die API an, 
+    # NUR Bilder mit diesem Tag zurückzugeben.
+    if tag_id:
+        logger.info(f"Tag-UUID gefunden: {tag_id}. Filtere API...")
+        payload["tagIds"] = [tag_id]
+    else:
+        logger.warning(f"Tag '{TARGET_TAG}' in Immich nicht gefunden! Suche nach Beschreibungs-Fallback...")
+
+    # 2. Assets bei der API anfragen
     url = f"{IMMICH_URL}/search/metadata"
-    
-    # Die Payload weist die API an, auch die EXIF/Metadaten zurückzugeben
-    payload = {
-        "withExif": True
-    }
-    
     resp = session.post(url, json=payload)
-    
-    # Fallback-Endpoint für spezifische Subversionen der v3-API
     if resp.status_code == 404:
         url = f"{IMMICH_URL}/search/searchAssets"
         resp = session.post(url, json=payload)
         
-    # Wirft einen Error, falls auch der neue Endpoint fehlschlägt
     resp.raise_for_status()
     data = resp.json()
     
-    # Die v3-API gibt die Daten oft paginiert in einem Dictionary zurück
     if isinstance(data, dict):
         all_assets = data.get("assets", data.get("items", []))
     else:
-        all_assets = data # Fallback, falls es noch als direkte Liste kommt
+        all_assets = data
         
     tagged_assets = []
+    
+    # 3. Assets auswerten
     for asset in all_assets:
-        # Falls die API nur IDs (Strings) zurückgibt, holen wir die Details einzeln
+        # Falls die API nur ID-Strings zurückgibt, volles Objekt nachladen
         if isinstance(asset, str):
             asset_id = asset
             try:
-                # Hole die vollen Metadaten für diese spezifische ID
                 detail_resp = session.get(f"{IMMICH_URL}/assets/{asset_id}")
                 if detail_resp.status_code == 200:
                     asset = detail_resp.json()
                 else:
                     continue
-            except Exception as e:
-                logger.debug(f"Überspringe Asset {asset_id}: Konnte Details nicht laden.")
+            except Exception:
                 continue
-                
-        # Sicherheits-Check: Falls es immer noch kein Dictionary ist, überspringen
+
         if not isinstance(asset, dict):
             continue
 
-        # Checke die Description und (falls vorhanden) die EXIF-Tags
+        # Wenn wir über die tagIds (UUID) gefiltert haben, ist das Asset bereits 100% korrekt.
+        if tag_id:
+            tagged_assets.append(asset)
+            continue
+            
+        # Fallback: Nur falls der offizielle Tag (noch) nicht gefunden wurde, 
+        # suchen wir weiterhin klassisch im Beschreibungstext
         exif_info = asset.get("exifInfo") or {}
         description = exif_info.get("description") or ""
         exif_tags = exif_info.get("tags") or []
         
-        # Ignoriere NoneTypes, falls die API null in den Feldern hat
-        if not isinstance(description, str): 
-            description = ""
-        if not isinstance(exif_tags, list):
-            exif_tags = []
+        if not isinstance(description, str): description = ""
+        if not isinstance(exif_tags, list): exif_tags = []
         
         if TARGET_TAG.lower() in description.lower() or TARGET_TAG in exif_tags:
             tagged_assets.append(asset)
