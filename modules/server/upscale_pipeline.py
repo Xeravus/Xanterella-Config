@@ -49,21 +49,39 @@ def save_state(processed_ids: List[str]):
     STATE_FILE.write_text(json.dumps(processed_ids))
 
 def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
-    """Holt alle Assets aus dem konfigurierten Album."""
+    """Holt alle Assets aus dem konfigurierten Album (via Search-API)."""
     if not ALBUM_ID:
         logger.error("IMMICH_ALBUM_ID ist nicht gesetzt! Abbruch.")
         sys.exit(1)
         
-    logger.info(f"Lade Assets aus Album: {ALBUM_ID} ...")
-    url = f"{IMMICH_URL}/albums/{ALBUM_ID}"
+    logger.info(f"Suche Assets für Album: {ALBUM_ID} ...")
     
-    resp = session.get(url)
+    # Nutze die Such-API, da diese garantiert die vollen Asset-Objekte lädt
+    url = f"{IMMICH_URL}/search/metadata"
+    # In manchen API-Versionen heißt das Feld 'albumId', in anderen 'albumIds' (als Array)
+    payload = {"albumId": ALBUM_ID, "withExif": True}
+    
+    resp = session.post(url, json=payload)
+    
+    # Fallback für andere API-Strukturen
+    if resp.status_code in [400, 404]:
+        payload_array = {"albumIds": [ALBUM_ID], "withExif": True}
+        resp = session.post(url, json=payload_array)
+        
+        # Fallback auf alten Endpoint
+        if resp.status_code in [400, 404]:
+            url = f"{IMMICH_URL}/search/searchAssets"
+            resp = session.post(url, json=payload_array)
+            
     resp.raise_for_status()
-    
     data = resp.json()
-    assets = data.get("assets", [])
-    logger.info(f"{len(assets)} Assets im Album gefunden.")
     
+    if isinstance(data, dict):
+        assets = data.get("assets", data.get("items", []))
+    else:
+        assets = data
+        
+    logger.info(f"{len(assets)} Assets im Album gefunden.")
     return assets
 
 def remove_from_album(session: requests.Session, asset_id: str):
