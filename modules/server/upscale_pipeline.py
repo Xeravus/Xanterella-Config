@@ -50,16 +50,35 @@ def save_state(processed_ids: List[str]):
 def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
     """
     Sucht nach Assets, die den TARGET_TAG in der Beschreibung haben.
-    Da die API sich häufig ändert, nutzen wir einen flexiblen Such-Ansatz.
+    Nutzt die moderne POST-Search-API für Immich v3+.
     """
     logger.info(f"Suche nach Assets mit dem Tag: {TARGET_TAG} ...")
     
-    # Nutze die Metadaten-Suche (POST /search/metadata bei neueren Versionen)
-    # Alternativ: Lade Assets und filtere lokal. Wir holen die letzten Assets und filtern.
-    resp = session.get(f"{IMMICH_URL}/assets")
-    resp.raise_for_status()
-    all_assets = resp.json()
+    # In neueren Immich Versionen nutzen wir den Search-Metadata Endpoint
+    url = f"{IMMICH_URL}/search/metadata"
     
+    # Die Payload weist die API an, auch die EXIF/Metadaten zurückzugeben
+    payload = {
+        "withExif": True
+    }
+    
+    resp = session.post(url, json=payload)
+    
+    # Fallback-Endpoint für spezifische Subversionen der v3-API
+    if resp.status_code == 404:
+        url = f"{IMMICH_URL}/search/searchAssets"
+        resp = session.post(url, json=payload)
+        
+    # Wirft einen Error, falls auch der neue Endpoint fehlschlägt
+    resp.raise_for_status()
+    data = resp.json()
+    
+    # Die v3-API gibt die Daten oft paginiert in einem Dictionary zurück
+    if isinstance(data, dict):
+        all_assets = data.get("assets", data.get("items", []))
+    else:
+        all_assets = data # Fallback, falls es noch als direkte Liste kommt
+        
     tagged_assets = []
     for asset in all_assets:
         # Checke die Description und (falls vorhanden) die EXIF-Tags
