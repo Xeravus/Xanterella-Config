@@ -57,90 +57,67 @@ def get_tag_id(session: requests.Session, tag_name: str) -> str:
         
     tags = resp.json()
     for tag in tags:
-        # Checkt sowohl name als auch value, falls das # Zeichen weggelassen wurde
-        if tag.get("name", "").lower() == tag_name.lower() or tag.get("value", "").lower() == tag_name.lower():
+        # Entferne ein eventuelles '#' aus dem TARGET_TAG für den Vergleich
+        clean_target = tag_name.lstrip('#').lower()
+        if tag.get("name", "").lower() == clean_target or tag.get("value", "").lower() == clean_target:
             return tag.get("id")
             
     return None
 
 def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
-    """Holt Assets über die Immich API und filtert lokal nach dem Tag."""
+    """Holt gezielt die Assets, die mit dem Tag verknüpft sind."""
     logger.info(f"Suche nach Assets mit dem Tag: {TARGET_TAG} ...")
     
     # 1. UUID des Tags herausfinden
     tag_id = get_tag_id(session, TARGET_TAG)
-    if tag_id:
-        logger.info(f"Tag-UUID gefunden: {tag_id}. Lade Assets zum lokalen Filtern...")
-    else:
-        logger.warning(f"Tag '{TARGET_TAG}' in Immich nicht gefunden! Suche nach Beschreibungs-Fallback...")
-
-    # 2. Assets bei der API anfragen (OHNE tagIds im Payload, um API-Fehler zu vermeiden)
-    payload = {"withExif": True}
     
-    url = f"{IMMICH_URL}/search/metadata"
-    resp = session.post(url, json=payload)
+    if not tag_id:
+        logger.warning(f"Tag '{TARGET_TAG}' in Immich nicht gefunden! Breche Suche ab.")
+        return []
+
+    logger.info(f"Tag-UUID gefunden: {tag_id}. Lade verknüpfte Assets...")
+
+    # 2. Nutze den Endpunkt: GET /tags/{id}/assets (Standard-Verhalten in vielen Immich Versionen)
+    # Alternativ (je nach exakter Sub-Version) über den Search-Endpunkt, aber mit korrektem Format.
+    
+    url = f"{IMMICH_URL}/tags/{tag_id}/assets"
+    resp = session.get(url)
+    
+    # Fallback, falls der /tags/{id}/assets Endpunkt in dieser Version nicht existiert
     if resp.status_code == 404:
-        url = f"{IMMICH_URL}/search/searchAssets"
-        resp = session.post(url, json=payload)
+        logger.debug("Fallback auf /search/metadata mit Tag-Filter...")
+        url_search = f"{IMMICH_URL}/search/metadata"
+        # In Version 3.x+ wird oft das `tagIds` Array in der Payload ignoriert, wenn man `withExif` nutzt.
+        # Wir übergeben es hier in der korrekten Struktur für die moderne Suche.
+        payload = {
+            "tagIds": [tag_id]
+        }
+        resp = session.post(url_search, json=payload)
         
     resp.raise_for_status()
     data = resp.json()
     
+    # Entpacke die Antwort, je nachdem welcher Endpunkt geantwortet hat
     if isinstance(data, dict):
-        all_assets = data.get("assets", data.get("items", []))
+        tagged_assets = data.get("assets", data.get("items", []))
     else:
-        all_assets = data
-        
-    tagged_assets = []
-    
-    # 3. Assets lokal durchsuchen
-    for asset in all_assets:
-        # Falls die API nur ID-Strings zurückgibt, volles Objekt nachladen
-        if isinstance(asset, str):
-            asset_id = asset
+        tagged_assets = data
+
+    # 3. Wir müssen sicherstellen, dass wir volle Asset-Objekte haben
+    final_assets = []
+    for asset in tagged_assets:
+        if isinstance(asset, str): # Falls nur IDs kamen
             try:
-                detail_resp = session.get(f"{IMMICH_URL}/assets/{asset_id}")
+                detail_resp = session.get(f"{IMMICH_URL}/assets/{asset}")
                 if detail_resp.status_code == 200:
-                    asset = detail_resp.json()
-                else:
-                    continue
+                    final_assets.append(detail_resp.json())
             except Exception:
                 continue
-
-        if not isinstance(asset, dict):
-            continue
-
-        has_target_tag = False
-
-        # Prüfe native Immich-Tags auf dem Asset
-        if tag_id:
-            # asset.get("tags") enthält meist eine Liste von Dictionaries, z.B. [{"id": "uuid", "name": "tag"}]
-            asset_tags = asset.get("tags", [])
-            for t in asset_tags:
-                if isinstance(t, dict) and t.get("id") == tag_id:
-                    has_target_tag = True
-                    break
-                elif isinstance(t, str) and t == tag_id:
-                    has_target_tag = True
-                    break
-                    
-        # Fallback auf Beschreibung / EXIF (für alte Versionen)
-        if not has_target_tag:
-            exif_info = asset.get("exifInfo") or {}
-            description = exif_info.get("description") or ""
-            exif_tags = exif_info.get("tags") or []
+        elif isinstance(asset, dict):
+            final_assets.append(asset)
             
-            if not isinstance(description, str): description = ""
-            if not isinstance(exif_tags, list): exif_tags = []
-            
-            if TARGET_TAG.lower() in description.lower() or TARGET_TAG in exif_tags:
-                has_target_tag = True
-                
-        if has_target_tag:
-            tagged_assets.append(asset)
-            
-    logger.info(f"{len(tagged_assets)} Assets mit dem Tag '{TARGET_TAG}' gefunden.")
-    return tagged_assets
+    logger.info(f"{len(final_assets)} Assets mit dem Tag '{TARGET_TAG}' gefunden.")
+    return final_assets
 
 def remove_tag(session: requests.Session, asset_id: str, current_description: str):
     """(Optional) Entfernt den Tag nach dem Upscaling aus der Beschreibung, um Ordnung zu halten."""
@@ -221,10 +198,6 @@ def main():
             new_id = upload_asset(session, out_path, asset)
             
             stack_assets(session, parent_id=new_id, child_id=asset_id)
-            
-            # (Optional) Tag aufräumen, damit der Workflow sauber bleibt
-            desc = asset.get("exifInfo", {}).get("description", "")
-            remove_tag(session, asset_id, desc)
             
             processed_ids.append(asset_id)
             save_state(processed_ids)
