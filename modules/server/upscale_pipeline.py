@@ -77,10 +77,23 @@ def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
     data = resp.json()
     
     if isinstance(data, dict):
-        assets = data.get("assets", data.get("items", []))
+        raw_assets = data.get("assets", data.get("items", []))
     else:
-        assets = data
+        raw_assets = data
         
+    # NEU: Verwandle Strings (IDs) in vollständige Asset-Dictionaries
+    assets = []
+    for item in raw_assets:
+        if isinstance(item, str):
+            try:
+                detail_resp = session.get(f"{IMMICH_URL}/assets/{item}")
+                if detail_resp.status_code == 200:
+                    assets.append(detail_resp.json())
+            except Exception:
+                pass
+        elif isinstance(item, dict):
+            assets.append(item)
+            
     logger.info(f"{len(assets)} Assets im Album gefunden.")
     return assets
 
