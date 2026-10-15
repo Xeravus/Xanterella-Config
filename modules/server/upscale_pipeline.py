@@ -81,12 +81,34 @@ def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
         
     tagged_assets = []
     for asset in all_assets:
+        # Falls die API nur IDs (Strings) zurückgibt, holen wir die Details einzeln
+        if isinstance(asset, str):
+            asset_id = asset
+            try:
+                # Hole die vollen Metadaten für diese spezifische ID
+                detail_resp = session.get(f"{IMMICH_URL}/assets/{asset_id}")
+                if detail_resp.status_code == 200:
+                    asset = detail_resp.json()
+                else:
+                    continue
+            except Exception as e:
+                logger.debug(f"Überspringe Asset {asset_id}: Konnte Details nicht laden.")
+                continue
+                
+        # Sicherheits-Check: Falls es immer noch kein Dictionary ist, überspringen
+        if not isinstance(asset, dict):
+            continue
+
         # Checke die Description und (falls vorhanden) die EXIF-Tags
-        description = asset.get("exifInfo", {}).get("description", "") or ""
-        exif_tags = asset.get("exifInfo", {}).get("tags", []) or []
+        exif_info = asset.get("exifInfo") or {}
+        description = exif_info.get("description") or ""
+        exif_tags = exif_info.get("tags") or []
         
-        # Ignoriere NoneTypes, falls die API null zurückgibt
-        if not isinstance(description, str): description = ""
+        # Ignoriere NoneTypes, falls die API null in den Feldern hat
+        if not isinstance(description, str): 
+            description = ""
+        if not isinstance(exif_tags, list):
+            exif_tags = []
         
         if TARGET_TAG.lower() in description.lower() or TARGET_TAG in exif_tags:
             tagged_assets.append(asset)
