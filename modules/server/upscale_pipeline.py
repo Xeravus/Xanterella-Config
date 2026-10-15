@@ -16,7 +16,7 @@ from urllib3.util.retry import Retry
 IMMICH_URL = os.getenv("IMMICH_URL", "http://localhost:2283/api").rstrip("/")
 API_KEY_FILE = os.getenv("IMMICH_API_KEY_FILE")
 ALBUM_ID = os.getenv("IMMICH_ALBUM_ID") # MUSS gesetzt werden!
-UPSCALER_CMD = os.getenv("UPSCALER_CMD", "realesrgan-ncnn-vulkan -i {input} -o {output}")
+UPSCALER_CMD = os.getenv("UPSCALER_CMD", "realesrgan-ncnn-vulkan -i {input} -o {output} -v")
 STATE_FILE = Path(os.getenv("STATE_FILE", "/var/lib/immich-upscale/processed.json"))
 TMP_DIR = Path(os.getenv("TMP_DIR", "/tmp/immich_upscale"))
 
@@ -49,53 +49,81 @@ def save_state(processed_ids: List[str]):
     STATE_FILE.write_text(json.dumps(processed_ids))
 
 def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
-    """Holt alle Assets aus dem konfigurierten Album (via Search-API)."""
-    if not ALBUM_ID:
-        logger.error("IMMICH_ALBUM_ID ist nicht gesetzt! Abbruch.")
-        sys.exit(1)
-        
-    logger.info(f"Suche Assets für Album: {ALBUM_ID} ...")
+    """Holt alle Assets, die mit dem Herz-Symbol (isFavorite) markiert sind."""
+    logger.info("Suche nach Bildern mit Herz-Symbol (Favoriten)...")
     
-    # Nutze die Such-API, da diese garantiert die vollen Asset-Objekte lädt
     url = f"{IMMICH_URL}/search/metadata"
-    # In manchen API-Versionen heißt das Feld 'albumId', in anderen 'albumIds' (als Array)
-    payload = {"albumId": ALBUM_ID, "withExif": True}
+    # Offizieller und stabiler API-Parameter für Favoriten
+    payload = {"isFavorite": True}
     
     resp = session.post(url, json=payload)
-    
-    # Fallback für andere API-Strukturen
-    if resp.status_code in [400, 404]:
-        payload_array = {"albumIds": [ALBUM_ID], "withExif": True}
-        resp = session.post(url, json=payload_array)
-        
-        # Fallback auf alten Endpoint
-        if resp.status_code in [400, 404]:
-            url = f"{IMMICH_URL}/search/searchAssets"
-            resp = session.post(url, json=payload_array)
-            
     resp.raise_for_status()
     data = resp.json()
     
+    raw_assets = []
+    
+    # Entpacken der Suchergebnisse
     if isinstance(data, dict):
-        raw_assets = data.get("assets", data.get("items", []))
-    else:
+        if "assets" in data and isinstance(data["assets"], dict) and "items" in data["assets"]:
+            raw_assets = data["assets"]["items"]
+        elif "assets" in data and isinstance(data["assets"], list):
+            raw_assets = data["assets"]
+        elif "items" in data and isinstance(data["items"], list):
+            raw_assets = data["items"]
+    elif isinstance(data, list):
         raw_assets = data
-        
-    # NEU: Verwandle Strings (IDs) in vollständige Asset-Dictionaries
-    assets = []
-    for item in raw_assets:
-        if isinstance(item, str):
-            try:
-                detail_resp = session.get(f"{IMMICH_URL}/assets/{item}")
-                if detail_resp.status_code == 200:
-                    assets.append(detail_resp.json())
-            except Exception:
-                pass
-        elif isinstance(item, dict):
-            assets.append(item)
             
-    logger.info(f"{len(assets)} Assets im Album gefunden.")
-    return assets
+    if not raw_assets:
+        logger.warning("Keine Favoriten gefunden. (Hast du die Bilder mit einem Herz markiert?)")
+        return []
+        
+    full_assets = []
+    for item in raw_assets:
+        asset_id = item.get("id") if isinstance(item, dict) else item
+        if not asset_id: 
+            continue
+        
+        try:
+            # Lade die vollen Details nach
+            detail_resp = session.get(f"{IMMICH_URL}/assets/{asset_id}")
+            if detail_resp.status_code == 200:
+                full_assets.append(detail_resp.json())
+        except Exception as e:
+            logger.debug(f"Konnte Details für {asset_id} nicht laden: {e}")
+            
+    logger.info(f"{len(full_assets)} Favoriten geladen und bereit.")
+    return full_assets
+
+def remove_favorite(session: requests.Session, asset_id: str):
+    """Entfernt das Herz-Symbol vom verarbeiteten Asset."""
+    url = f"{IMMICH_URL}/assets/{asset_id}"
+    resp = session.put(url, json={"isFavorite": False})
+    
+    if resp.status_code == 200:
+        logger.info(f"Herz-Symbol erfolgreich vom Original-Asset entfernt.")
+    else:
+        logger.warning(f"Konnte Herz-Symbol nicht entfernen (Code {resp.status_code}).")
+
+def upload_asset(session: requests.Session, file_path: Path, original_meta: Dict[str, Any]) -> str:
+    """Lädt das Bild hoch und garantiert eine einzigartige ID für das Stacking."""
+    url = f"{IMMICH_URL}/assets"
+    
+    # NEU: Wir nutzen die einzigartige 'id' des Originalbildes, damit Immich
+    # niemals denkt, es handele sich um Duplikate.
+    unique_id = original_meta.get('id', 'fallback')
+    
+    data = {
+        'deviceAssetId': f"upscale_{unique_id}",
+        'deviceId': 'nixos-ai-pipeline',
+        'fileCreatedAt': original_meta.get('fileCreatedAt'),
+        'fileModifiedAt': original_meta.get('fileModifiedAt')
+    }
+    
+    with open(file_path, "rb") as f:
+        resp = session.post(url, data=data, files={'assetData': (file_path.name, f, 'image/jpeg')})
+        resp.raise_for_status()
+        
+    return resp.json().get("id")
 
 def remove_from_album(session: requests.Session, asset_id: str):
     """Entfernt das verarbeitete Asset aus dem Upscale-Album, um aufzuräumen."""
@@ -174,11 +202,10 @@ def main():
             download_asset(session, asset, in_path)
             upscale_image(in_path, out_path)
             new_id = upload_asset(session, out_path, asset)
-            
             stack_assets(session, parent_id=new_id, child_id=asset_id)
             
-            # Neu: Bild aus dem Upscale-Album entfernen, damit es dort aufgeräumt wird
-            remove_from_album(session, asset_id)
+            # Neu: Herz-Symbol wieder wegnehmen!
+            remove_favorite(session, asset_id)
             
             processed_ids.append(asset_id)
             save_state(processed_ids)
