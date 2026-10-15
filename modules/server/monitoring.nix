@@ -7,7 +7,7 @@
 }: let
   cfg = config.xanterella.monitoring;
   nodeCfg = config.xanterella.cluster-node;
-  ClusterNodes = ["alpha" "beta" "gamma"];
+  ClusterNodes = ["alpha" "beta" "gamma" "delta" "epsilon" "zeta"];
 
   rawNodeDashboard = builtins.fromJSON (builtins.readFile "${inputs.xanterella-etc}/grafana/monitoring.json");
   patchedNodeDashboard =

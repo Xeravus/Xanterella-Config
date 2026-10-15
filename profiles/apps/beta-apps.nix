@@ -25,9 +25,6 @@
       arm = {
         enable = true;
       };
-      ha = {
-        enable = true;
-      };
       fastfetch = {
         enable = true;
       };
@@ -37,13 +34,7 @@
       prometheus = {
         enable = true;
       };
-      netbird = {
-        enable = true;
-      };
       stress = {
-        enable = true;
-      };
-      metasploitable = {
         enable = true;
       };
       immich-ml = {
