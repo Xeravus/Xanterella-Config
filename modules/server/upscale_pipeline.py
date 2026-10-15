@@ -12,9 +12,10 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+# --- Konfiguration ---
 IMMICH_URL = os.getenv("IMMICH_URL", "http://localhost:2283/api").rstrip("/")
 API_KEY_FILE = os.getenv("IMMICH_API_KEY_FILE")
-TARGET_TAG = os.getenv("IMMICH_TARGET_TAG", "#upscale")
+ALBUM_ID = os.getenv("IMMICH_ALBUM_ID") # MUSS gesetzt werden!
 UPSCALER_CMD = os.getenv("UPSCALER_CMD", "realesrgan-ncnn-vulkan -i {input} -o {output}")
 STATE_FILE = Path(os.getenv("STATE_FILE", "/var/lib/immich-upscale/processed.json"))
 TMP_DIR = Path(os.getenv("TMP_DIR", "/tmp/immich_upscale"))
@@ -23,13 +24,13 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger("immich-upscaler")
 
 def get_api_key() -> str:
-    """Liest den API-Key (bevorzugt aus der Agenix-Datei)."""
+    """Liest den API-Key aus der Agenix-Datei oder der Umgebung."""
     if API_KEY_FILE and Path(API_KEY_FILE).exists():
         with open(API_KEY_FILE, "r") as f:
             return f.read().strip()
     key = os.getenv("IMMICH_API_KEY")
     if not key:
-        logger.error("Kein API-Key gefunden! Weder IMMICH_API_KEY_FILE noch IMMICH_API_KEY ist gesetzt.")
+        logger.error("Kein API-Key gefunden!")
         sys.exit(1)
     return key
 
@@ -47,87 +48,34 @@ def save_state(processed_ids: List[str]):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps(processed_ids))
 
-def get_tag_id(session: requests.Session, tag_name: str) -> str:
-    """Holt die interne UUID des Immich-Tags basierend auf seinem Namen."""
-    url = f"{IMMICH_URL}/tags"
-    resp = session.get(url)
-    if resp.status_code != 200:
-        logger.warning(f"Konnte Tag-Liste nicht laden: {resp.status_code}")
-        return None
-        
-    tags = resp.json()
-    for tag in tags:
-        # Entferne ein eventuelles '#' aus dem TARGET_TAG für den Vergleich
-        clean_target = tag_name.lstrip('#').lower()
-        if tag.get("name", "").lower() == clean_target or tag.get("value", "").lower() == clean_target:
-            return tag.get("id")
-            
-    return None
-
 def get_assets_to_process(session: requests.Session) -> List[Dict[str, Any]]:
-    """Holt gezielt die Assets, die mit dem Tag verknüpft sind."""
-    logger.info(f"Suche nach Assets mit dem Tag: {TARGET_TAG} ...")
-    
-    # 1. UUID des Tags herausfinden
-    tag_id = get_tag_id(session, TARGET_TAG)
-    
-    if not tag_id:
-        logger.warning(f"Tag '{TARGET_TAG}' in Immich nicht gefunden! Breche Suche ab.")
-        return []
-
-    logger.info(f"Tag-UUID gefunden: {tag_id}. Lade verknüpfte Assets...")
-
-    # 2. Nutze den Endpunkt: GET /tags/{id}/assets (Standard-Verhalten in vielen Immich Versionen)
-    # Alternativ (je nach exakter Sub-Version) über den Search-Endpunkt, aber mit korrektem Format.
-    
-    url = f"{IMMICH_URL}/tags/{tag_id}/assets"
-    resp = session.get(url)
-    
-    # Fallback, falls der /tags/{id}/assets Endpunkt in dieser Version nicht existiert
-    if resp.status_code == 404:
-        logger.debug("Fallback auf /search/metadata mit Tag-Filter...")
-        url_search = f"{IMMICH_URL}/search/metadata"
-        # In Version 3.x+ wird oft das `tagIds` Array in der Payload ignoriert, wenn man `withExif` nutzt.
-        # Wir übergeben es hier in der korrekten Struktur für die moderne Suche.
-        payload = {
-            "tagIds": [tag_id]
-        }
-        resp = session.post(url_search, json=payload)
+    """Holt alle Assets aus dem konfigurierten Album."""
+    if not ALBUM_ID:
+        logger.error("IMMICH_ALBUM_ID ist nicht gesetzt! Abbruch.")
+        sys.exit(1)
         
+    logger.info(f"Lade Assets aus Album: {ALBUM_ID} ...")
+    url = f"{IMMICH_URL}/albums/{ALBUM_ID}"
+    
+    resp = session.get(url)
     resp.raise_for_status()
+    
     data = resp.json()
+    assets = data.get("assets", [])
+    logger.info(f"{len(assets)} Assets im Album gefunden.")
     
-    # Entpacke die Antwort, je nachdem welcher Endpunkt geantwortet hat
-    if isinstance(data, dict):
-        tagged_assets = data.get("assets", data.get("items", []))
+    return assets
+
+def remove_from_album(session: requests.Session, asset_id: str):
+    """Entfernt das verarbeitete Asset aus dem Upscale-Album, um aufzuräumen."""
+    url = f"{IMMICH_URL}/albums/{ALBUM_ID}/assets"
+    # Die Immich API nutzt DELETE mit einem Body (assetIds) für das Entfernen
+    resp = session.delete(url, json={"assetIds": [asset_id]})
+    
+    if resp.status_code in [200, 201, 204]:
+        logger.info(f"Original-Asset erfolgreich aus dem Upscale-Album entfernt.")
     else:
-        tagged_assets = data
-
-    # 3. Wir müssen sicherstellen, dass wir volle Asset-Objekte haben
-    final_assets = []
-    for asset in tagged_assets:
-        if isinstance(asset, str): # Falls nur IDs kamen
-            try:
-                detail_resp = session.get(f"{IMMICH_URL}/assets/{asset}")
-                if detail_resp.status_code == 200:
-                    final_assets.append(detail_resp.json())
-            except Exception:
-                continue
-        elif isinstance(asset, dict):
-            final_assets.append(asset)
-            
-    logger.info(f"{len(final_assets)} Assets mit dem Tag '{TARGET_TAG}' gefunden.")
-    return final_assets
-
-def remove_tag(session: requests.Session, asset_id: str, current_description: str):
-    """(Optional) Entfernt den Tag nach dem Upscaling aus der Beschreibung, um Ordnung zu halten."""
-    if not current_description: return
-    new_desc = current_description.replace(TARGET_TAG, "").strip()
-    
-    url = f"{IMMICH_URL}/assets/{asset_id}"
-    resp = session.put(url, json={"description": new_desc})
-    if resp.status_code == 200:
-        logger.info(f"Tag '{TARGET_TAG}' erfolgreich vom Original-Asset entfernt.")
+        logger.warning(f"Konnte Asset nicht aus dem Album entfernen (Code {resp.status_code}).")
 
 def download_asset(session: requests.Session, asset: Dict[str, Any], out_path: Path):
     asset_id = asset["id"]
@@ -154,8 +102,6 @@ def upscale_image(input_path: Path, output_path: Path):
 
 def upload_asset(session: requests.Session, file_path: Path, original_meta: Dict[str, Any]) -> str:
     url = f"{IMMICH_URL}/assets"
-    
-    # Originale Metadaten (Zeitstempel) kopieren, damit es in der Timeline am selben Ort bleibt
     data = {
         'deviceAssetId': f"upscaled_{original_meta.get('deviceAssetId', 'unknown')}",
         'deviceId': 'nixos-ai-pipeline',
@@ -185,6 +131,7 @@ def main():
 
     for asset in assets:
         asset_id = asset["id"]
+        # Falls das Bild schon verarbeitet wurde oder kein Bild ist, überspringen
         if asset_id in processed_ids or asset.get("type", "IMAGE") != "IMAGE":
             continue
 
@@ -198,6 +145,9 @@ def main():
             new_id = upload_asset(session, out_path, asset)
             
             stack_assets(session, parent_id=new_id, child_id=asset_id)
+            
+            # Neu: Bild aus dem Upscale-Album entfernen, damit es dort aufgeräumt wird
+            remove_from_album(session, asset_id)
             
             processed_ids.append(asset_id)
             save_state(processed_ids)

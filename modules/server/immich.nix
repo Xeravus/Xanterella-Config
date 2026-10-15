@@ -177,10 +177,8 @@ in {
 
             environment = {
               IMMICH_URL = "https://immich.xanterella.de/api";
-              # Das Skript liest den Key aus dieser Datei (von Agenix bereitgestellt)
               IMMICH_API_KEY_FILE = config.age.secrets.immich-api-key.path;
-              # Der Tag, nach dem in der Beschreibung gesucht wird
-              IMMICH_TARGET_TAG = "#upscale";
+              IMMICH_ALBUM_ID = "a4c5075b-8951-4807-a954-df020350663d";
 
               UPSCALER_CMD = "${pkgs-unstable.realesrgan-ncnn-vulkan}/bin/realesrgan-ncnn-vulkan -i {input} -o {output} -n realesrgan-x4plus";
               TMP_DIR = "/tmp/immich_upscale";
