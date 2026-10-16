@@ -18,15 +18,6 @@
   };
 
   config = lib.mkIf config.xanterella.minecraft-server.enable {
-    age = {
-      secrets = {
-        minecraft-rcone = {
-          file = ./../agenix/minecraft-rcone.age;
-          owner = "minecraft";
-          group = "minecraft";
-        };
-      };
-    };
     services = {
       minecraft-server = {
         enable = true;
@@ -42,24 +33,15 @@
           max-players = 20;
           simulation-distance = 12;
           view-distance = 10;
+          force-gamemode = true;
+          management-server-enabled = true;
+          management-server-host = "beta.gute-nessie.ts.net";
+          management-server-port = 25566;
+          #management-server-secret = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+          management-server-tls-enabled = false;
           enable-rcon = true;
           "rcon.port" = 25575;
-        };
-      };
-    };
-
-    systemd = {
-      services = {
-        minecraft-server = {
-          preStart = lib.mkAfter ''
-            if [ -L server.properties ]; then
-              REAL_PROP=$(readlink server.properties)
-              rm server.properties
-              cp "$REAL_PROP" server.properties
-              chmod 600 server.properties
-            fi
-            echo "rcon.password=$(cat ${config.age.secrets.minecraft-rcone.path})" >> server.properties
-          '';
+          "rcon.passwort" = "Extremsehrunfassbarsicherespasswortnatürlichgehasht";
         };
       };
     };
