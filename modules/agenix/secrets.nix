@@ -50,6 +50,9 @@ in {
   "rclone.conf.age" = {
     publicKeys = users ++ server;
   };
+  "minecraft-rcone.age" = {
+    publicKeys = users ++ server;
+  };
   "matrix.yaml.age" = {
     publicKeys = users ++ server;
   };
