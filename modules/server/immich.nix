@@ -216,7 +216,7 @@ in {
             description = "Run Immich Upscaling Pipeline";
             wantedBy = ["timers.target"];
             timerConfig = {
-              OnCalendar = "hourly";
+              #OnCalendar = "hourly";
               Persistent = true;
             };
           };

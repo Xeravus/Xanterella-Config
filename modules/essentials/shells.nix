@@ -93,8 +93,9 @@ in {
           ];
 
           shellAliases = {
-            l = "eza -lha";
-            ls = "eza";
+            l = "eza --icons -lha";
+            ls = "eza --icons";
+            tree = "eza --tree --icons";
             cl = "clear";
             f = "fastfetch";
             v = "nvim";

@@ -7,11 +7,8 @@
   config = {
     xanterella = {
       cluster-node = {
-        enable = true;
+        enable = false;
         domain = "xeravus.gute-nessie.ts.net";
-      };
-      immich-ml = {
-        enable = true;
       };
       ani-cli = {
         enable = true;

@@ -31,6 +31,9 @@
       btop = {
         enable = true;
       };
+      minecraft-server = {
+        enable = true;
+      };
       prometheus = {
         enable = true;
       };

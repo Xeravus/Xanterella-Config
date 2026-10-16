@@ -9,7 +9,7 @@
         enable = true;
       };
       minecraft = {
-        enable = false;
+        enable = true;
       };
       logitech = {
         enable = true;

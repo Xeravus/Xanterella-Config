@@ -16,7 +16,7 @@ from urllib3.util.retry import Retry
 IMMICH_URL = os.getenv("IMMICH_URL", "http://localhost:2283/api").rstrip("/")
 API_KEY_FILE = os.getenv("IMMICH_API_KEY_FILE")
 ALBUM_ID = os.getenv("IMMICH_ALBUM_ID") # MUSS gesetzt werden!
-UPSCALER_CMD = os.getenv("UPSCALER_CMD", "realesrgan-ncnn-vulkan -i {input} -o {output} -v")
+UPSCALER_CMD = os.getenv("UPSCALER_CMD", "realesrgan-ncnn-vulkan -i {input} -o {output} -t 64 -v")
 STATE_FILE = Path(os.getenv("STATE_FILE", "/var/lib/immich-upscale/processed.json"))
 TMP_DIR = Path(os.getenv("TMP_DIR", "/tmp/immich_upscale"))
 
@@ -42,7 +42,16 @@ def get_session() -> requests.Session:
     return session
 
 def load_state() -> List[str]:
-    return json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else []
+    if STATE_FILE.exists():
+        content = STATE_FILE.read_text().strip()
+        if not content:  # Fängt eine komplett leere Datei ab
+            return []
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError:
+            logger.warning("Status-Datei war korrupt und wird mit einer leeren Liste überschrieben.")
+            return []
+    return []
 
 def save_state(processed_ids: List[str]):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)

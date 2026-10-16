@@ -1,6 +1,6 @@
 {
   config,
-  pkgs,
+  pkgs-unstable,
   lib,
   ...
 }: {
@@ -14,8 +14,7 @@
 
   config = lib.mkIf config.xanterella.minecraft.enable {
     environment = {
-      systemPackages = with pkgs; [
-        modrinth-app
+      systemPackages = with pkgs-unstable; [
         prismlauncher
       ];
     };
