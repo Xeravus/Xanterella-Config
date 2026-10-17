@@ -96,6 +96,7 @@ in {
             l = "eza --icons -lha";
             ls = "eza --icons";
             tree = "eza --tree --icons";
+            cd = "zoxide";
             cl = "clear";
             f = "fastfetch";
             v = "nvim";
