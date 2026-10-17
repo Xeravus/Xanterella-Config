@@ -18,6 +18,7 @@
   };
 
   config = lib.mkIf config.xanterella.minecraft-server.enable {
+    # Das Overlay wird zwingend benötigt, um Zugriff auf pkgs.fabricServers zu bekommen
     nixpkgs.overlays = [inputs.nix-minecraft.overlay];
 
     services.minecraft-servers = {
