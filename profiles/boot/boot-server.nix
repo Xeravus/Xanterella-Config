@@ -23,9 +23,6 @@
       network = {
         enable = true;
       };
-      zip = {
-        enable = true;
-      };
       yazi = {
         enable = true;
       };
