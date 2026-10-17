@@ -45,7 +45,7 @@
         enable = true;
       };
       netbird = {
-        enable = true;
+        enable = false;
       };
       tree = {
         enable = true;
