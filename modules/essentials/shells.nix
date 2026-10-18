@@ -128,20 +128,7 @@ in {
           settings = {
             "$schema" = "https://starship.rs/schema/starship-schema.json";
 
-            format = ''
-              [](mauve)
-              $custom
-              [](bg:surface2 fg:mauve)
-              $directory
-              [](bg:surface1 fg:surface2)
-              $git_branch
-              $git_status
-              [](bg:surface0 fg:surface1)
-              $rust
-              [](fg:surface0)
-              $line_break
-              [](mauve)$character'';
-
+            format = "$custom[](bg:surface2 fg:mauve)$directory[](bg:surface1 fg:surface2)$git_branch$git_status[](bg:surface0 fg:surface1)$rust[](fg:surface0)$line_break$character";
             palette = "catppuccin_mocha";
 
             palettes = {
