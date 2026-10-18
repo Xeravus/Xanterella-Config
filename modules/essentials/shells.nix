@@ -129,7 +129,7 @@ in {
             add_newline = false;
             command_timeout = 1000;
 
-            format = "$shlvl$shell$username$hostname$nix_shell$git_branch$git_commit$git_state$git_status$directory$jobs$cmd_duration$character";
+            format = "$os$nix_shell$directory$git_branch$git_state$git_status$character";
 
             character = {
               success_symbol = "[➜](bold green)";
