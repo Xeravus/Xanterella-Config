@@ -54,6 +54,7 @@ in {
           bat
           eza
           jq
+          starship
         ];
       };
 
@@ -122,39 +123,6 @@ in {
         zoxide = {
           enable = true;
           enableZshIntegration = true;
-        };
-        starship = {
-          enable = true;
-          settings = {
-            add_newline = false;
-            command_timeout = 1000;
-
-            format = "$os$nix_shell$directory$git_branch$git_state$git_status$character";
-
-            character = {
-              success_symbol = "[➜](bold green)";
-              error_symbol = "[➜](bold red)";
-            };
-
-            package = {
-              disabled = true;
-            };
-
-            time = {
-              disabled = true;
-            };
-
-            username = {
-              style_user = "bright-white bold";
-              style_root = "bright-red bold";
-              show_always = true;
-            };
-
-            directory = {
-              truncation_length = 3;
-              truncate_to_repo = true;
-            };
-          };
         };
       };
 
