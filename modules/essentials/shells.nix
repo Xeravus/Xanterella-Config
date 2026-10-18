@@ -32,9 +32,6 @@
     #source ${inputs.p10k-src}/powerlevel10k.zsh-theme
     #source ${p10kConf}
     ${yaziFunc}
-
-    eval "$(starship init zsh)"
-
     #(( ! ''${+functions[p10k]} )) || p10k finalize
   '';
 in {
@@ -56,7 +53,6 @@ in {
           bat
           eza
           jq
-          #starship
         ];
       };
 
@@ -128,6 +124,7 @@ in {
         };
         starship = {
           enable = true;
+          package = pkgs.starship;
           settings = {
             "$schema" = "https://starship.rs/schema/starship-schema.json";
 
