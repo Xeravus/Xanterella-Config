@@ -25,15 +25,15 @@
     export ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump-$HOST-$ZSH_VERSION"
     export DIRENV_LOG_FORMAT=""
 
-    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-    fi
+    #if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+    #  source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+    #fi
 
-    source ${inputs.p10k-src}/powerlevel10k.zsh-theme
-    source ${p10kConf}
+    #source ${inputs.p10k-src}/powerlevel10k.zsh-theme
+    #source ${p10kConf}
     ${yaziFunc}
 
-    (( ! ''${+functions[p10k]} )) || p10k finalize
+    #(( ! ''${+functions[p10k]} )) || p10k finalize
   '';
 in {
   options = {
@@ -51,7 +51,6 @@ in {
     (lib.mkIf config.xanterella.zsh.enable {
       environment = {
         systemPackages = with pkgs; [
-          zsh-powerlevel10k
           bat
           eza
           jq
@@ -123,6 +122,9 @@ in {
         zoxide = {
           enable = true;
           enableZshIntegration = true;
+        };
+        starship = {
+          enable = true;
         };
       };
 
