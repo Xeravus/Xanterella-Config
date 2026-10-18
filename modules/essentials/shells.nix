@@ -33,7 +33,7 @@
     #source ${p10kConf}
     ${yaziFunc}
 
-    eval "$(starship init zsh)"
+    #eval "$(starship init zsh)"
 
     #(( ! ''${+functions[p10k]} )) || p10k finalize
   '';
@@ -56,7 +56,7 @@ in {
           bat
           eza
           jq
-          starship
+          #starship
         ];
       };
 
@@ -125,6 +125,96 @@ in {
         zoxide = {
           enable = true;
           enableZshIntegration = true;
+        };
+        starship = {
+          enable = true;
+          settings = {
+            "$schema" = "https://starship.rs/schema/starship-schema.json";
+
+            format = ''
+              [](mauve)\
+              $custom\
+              [](bg:surface2 fg:mauve)\
+              $directory\
+              [](bg:surface1 fg:surface2)\
+              $git_branch\
+              $git_status\
+              [](bg:surface0 fg:surface1)\
+              $rust\
+              [](fg:surface0)\
+              $line_break\
+              [](mauve)$character'';
+
+            palette = "catppuccin_mocha";
+
+            palettes.catppuccin_mocha = {
+              rosewater = "#f5e0dc";
+              flamingo = "#f2cdcd";
+              pink = "#f5c2e7";
+              mauve = "#cba6f7";
+              red = "#f38ba8";
+              maroon = "#eba0ac";
+              peach = "#fab387";
+              yellow = "#f9e2af";
+              green = "#a6e3a1";
+              teal = "#94e2d5";
+              sky = "#89dceb";
+              sapphire = "#74c7ec";
+              blue = "#89b4fa";
+              lavender = "#b4befe";
+              text = "#cdd6f4";
+              subtext1 = "#bac2de";
+              subtext0 = "#a6adc8";
+              overlay2 = "#9399b2";
+              overlay1 = "#7f849c";
+              overlay0 = "#6c7086";
+              surface2 = "#585b70";
+              surface1 = "#45475a";
+              surface0 = "#313244";
+              base = "#1e1e2e";
+              mantle = "#181825";
+              crust = "#11111b";
+            };
+
+            custom.username = {
+              command = ''echo "$USER@$(hostname)"'';
+              style = "bg:mauve fg:crust";
+              format = "[ $output ]($style)";
+              when = true;
+            };
+
+            directory = {
+              style = "fg:mauve bg:surface2";
+              format = "[ $path ]($style)";
+            };
+
+            git_branch = {
+              symbol = "";
+              style = "bg:surface1";
+              format = "[[ $symbol ](fg:maroon bg:surface1)]($style)";
+            };
+
+            git_status = {
+              style = "bg:surface1";
+              format = "[[($all_status$ahead_behind )](fg:maroon bg:surface1)]($style)";
+            };
+
+            rust = {
+              symbol = "";
+              style = "bg:surface0";
+              format = "[[ $symbol( $version) ](fg:peach bg:surface0)]($style)";
+            };
+
+            line_break = {
+              disabled = false;
+            };
+
+            character = {
+              disabled = false;
+              success_symbol = "[>](bold fg:teal)";
+              error_symbol = "[>](bold fg:red)";
+            };
+          };
         };
       };
 
