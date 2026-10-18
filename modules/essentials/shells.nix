@@ -125,6 +125,9 @@ in {
         };
         starship = {
           enable = true;
+          settings = {
+            format = "$os$directory";
+          };
         };
       };
 
