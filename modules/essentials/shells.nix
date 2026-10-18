@@ -33,6 +33,8 @@
     #source ${p10kConf}
     ${yaziFunc}
 
+    eval "$(starship init zsh)"
+
     #(( ! ''${+functions[p10k]} )) || p10k finalize
   '';
 in {
