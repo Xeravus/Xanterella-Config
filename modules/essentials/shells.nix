@@ -126,7 +126,34 @@ in {
         starship = {
           enable = true;
           settings = {
-            format = "$os $directory";
+            add_newline = false;
+            command_timeout = 1000;
+
+            format = "$shlvl$shell$username$hostname$nix_shell$git_branch$git_commit$git_state$git_status$directory$jobs$cmd_duration$character";
+
+            character = {
+              success_symbol = "[➜](bold green)";
+              error_symbol = "[➜](bold red)";
+            };
+
+            package = {
+              disabled = true;
+            };
+
+            time = {
+              disabled = true;
+            };
+
+            username = {
+              style_user = "bright-white bold";
+              style_root = "bright-red bold";
+              show_always = true;
+            };
+
+            directory = {
+              truncation_length = 3;
+              truncate_to_repo = true;
+            };
           };
         };
       };
