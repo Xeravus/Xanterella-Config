@@ -168,27 +168,6 @@
             ./../profiles/ssh-keys.nix
           ];
         });
-      vicuna-image = withSystem "aarch64-linux" ({
-        pkgs-new,
-        pkgs-unstable,
-        pkgs-bleeding,
-        ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            ./../hosts/vicuna/configuration.nix
-            ./../profiles/ssh-keys.nix
-            inputs.nixos-hardware.nixosModules.raspberry-pi-5
-            "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
-          ];
-        });
       crylia = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
