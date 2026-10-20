@@ -27,7 +27,7 @@
         enable = true;
       };
       matrix-server = {
-        enable = false;
+        enable = true;
       };
       opsbot = {
         enable = false;

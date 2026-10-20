@@ -96,6 +96,11 @@ in {
         clock24 = true;
         keyMode = "vi";
         baseIndex = 1;
+        plugins = with pkgs.tmuxPlugins; [
+          {
+            plugin = catppuccin;
+          }
+        ];
       };
     };
   };

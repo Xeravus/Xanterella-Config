@@ -14,7 +14,7 @@ in {
         enable = lib.mkEnableOption "Aktiviert Matrix Pipeline";
         domain = lib.mkOption {
           type = lib.types.str;
-          default = "${nodeCfg.tailscale-domain}";
+          default = "matrix.${nodeCfg.domain}";
         };
       };
     };
@@ -48,6 +48,12 @@ in {
           "mautrix-whatsapp"
           "mautrix-discord"
         ];
+        settings = {
+          lc_messages = "en_US.UTF-8";
+          lc_monetary = "en_US.UTF-8";
+          lc_numeric = "en_US.UTF-8";
+          lc_time = "en_US.UTF-8";
+        };
         ensureUsers = [
           {
             name = "matrix-synapse";
@@ -68,6 +74,10 @@ in {
         settings = {
           server_name = cfg.domain;
           enable_registration = false;
+          app_service_config_files = [
+            "/var/lib/mautrix-whatsapp/registration.yaml"
+            "/var/lib/mautrix-discord/registration.yaml"
+          ];
           database = {
             name = "psycopg2";
             allow_unsafe_locale = true;
@@ -102,7 +112,7 @@ in {
           };
           bridge = {
             permissions = {
-              "@xeravus:${cfg.domain}" = "admin";
+              "@xeravus:${nodeCfg.domain}" = "admin";
             };
           };
         };
@@ -122,11 +132,11 @@ in {
           };
           homeserver = {
             address = "http://127.0.0.1:8008";
-            domain = config.xanterella.matrix-server.domain;
+            domain = cfg.domain;
           };
           bridge = {
             permissions = {
-              "@xeravus:${cfg.domain}" = "admin";
+              "@xeravus:${nodeCfg.domain}" = "admin";
             };
           };
         };
@@ -134,14 +144,19 @@ in {
       caddy = {
         enable = true;
         virtualHosts = {
-          "https://alpha.gute-nessie.ts.net" = {
+          "matrix.${nodeCfg.domain}" = {
             extraConfig = ''
-              handle /_matrix* {
-              reverse_proxy 127.0.0.1:8008
-              }
-              handle /_synapse/client* {
-              reverse_proxy 127.0.0.1:8008
-              }
+              reverse_proxy /_matrix* 127.0.0.1:8008
+              reverse_proxy /_synapse/client* 127.0.0.1:8008
+
+              header /.well-known/matrix/* Access-Control-Allow-Origin "*"
+
+              respond /.well-known/matrix/server `{"m.server": "matrix.${nodeCfg.domain}:443"}`
+              respond /.well-known/matrix/client `{
+                "m.homeserver": {
+                  "base_url": "https://matrix.${nodeCfg.domain}"
+                }
+              }`
             '';
           };
         };

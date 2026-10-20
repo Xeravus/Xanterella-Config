@@ -30,6 +30,7 @@
           motd = "Xanterella MC Server - NixOS";
           difficulty = "normal";
           gamemode = "survival";
+          # gamemode = "creative";
           max-players = 20;
           simulation-distance = 12;
           view-distance = 10;
@@ -41,9 +42,12 @@
           management-server-tls-enabled = false;
           enable-rcon = true;
           "rcon.port" = 25575;
-          "rcon.passwort" = "Extremsehrunfassbarsicherespasswortnatürlichgehasht";
+          "rcon.password" = "DeinSicheresPasswort";
         };
       };
+    };
+    environment = {
+      systemPackages = [pkgs.mcrcon];
     };
   };
 }
