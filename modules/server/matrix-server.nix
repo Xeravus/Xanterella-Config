@@ -48,12 +48,6 @@ in {
           "mautrix-whatsapp"
           "mautrix-discord"
         ];
-        settings = {
-          lc_messages = "en_US.UTF-8";
-          lc_monetary = "en_US.UTF-8";
-          lc_numeric = "en_US.UTF-8";
-          lc_time = "en_US.UTF-8";
-        };
         ensureUsers = [
           {
             name = "matrix-synapse";

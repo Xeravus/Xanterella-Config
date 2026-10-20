@@ -86,20 +86,18 @@ in {
     environment = {
       systemPackages = [
         kittywrapped
-        pkgs.tmux
         pkgs.kitty-themes
         dev
       ];
     };
     programs = {
       tmux = {
+        enable = true;
         clock24 = true;
         keyMode = "vi";
         baseIndex = 1;
         plugins = with pkgs.tmuxPlugins; [
-          {
-            plugin = catppuccin;
-          }
+          catppuccin
         ];
       };
     };
