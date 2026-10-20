@@ -69,8 +69,8 @@ in {
           server_name = cfg.domain;
           enable_registration = false;
           app_service_config_files = [
-            "/var/lib/mautrix-whatsapp/registration.yaml"
-            "/var/lib/mautrix-discord/registration.yaml"
+            "/var/lib/mautrix-whatsapp/whatsapp-registration.yaml"
+            "/var/lib/matrix-synapse/discord-registration.yaml"
           ];
           database = {
             name = "psycopg2";

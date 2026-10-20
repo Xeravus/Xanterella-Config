@@ -27,7 +27,7 @@
         enable = false;
       };
       element = {
-        enable = false;
+        enable = true;
       };
       nitch = {
         enable = true;
