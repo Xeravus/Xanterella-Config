@@ -68,10 +68,10 @@ in {
         settings = {
           server_name = cfg.domain;
           enable_registration = false;
-          app_service_config_files = [
-            "/var/lib/mautrix-whatsapp/whatsapp-registration.yaml"
-            "/var/lib/matrix-synapse/discord-registration.yaml"
-          ];
+          #app_service_config_files = [
+          #  "/var/lib/mautrix-whatsapp/whatsapp-registration.yaml"
+          #  "/var/lib/mautrix-discord/discord-registration.yaml"
+          #];
           database = {
             name = "psycopg2";
             allow_unsafe_locale = true;
@@ -158,6 +158,15 @@ in {
       tailscale = {
         enable = true;
         permitCertUid = "caddy";
+      };
+    };
+    systemd = {
+      services = {
+        matrix-synapse = {
+          serviceConfig = {
+            TimeoutStartSec = "180s";
+          };
+        };
       };
     };
     users = {
