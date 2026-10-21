@@ -306,13 +306,6 @@ in {
           };
         };
       };
-      users = {
-        users = {
-          cato = {
-            extraGroups = ["cdrom" "video" "media"];
-          };
-        };
-      };
       networking.firewall.allowedTCPPorts = [8080];
     })
   ];
