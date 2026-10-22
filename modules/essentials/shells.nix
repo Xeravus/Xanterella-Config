@@ -107,6 +107,7 @@ in {
             p = "pyroclear && clear";
             cat = "bat";
             thm = "sudo openvpn ~/tryhackme/VPN/tryhackme.ovpn";
+            larp = "cargo clean -q && cargo build --vv -r";
 
             alpha = "ssh cato@alpha";
             beta = "ssh cato@beta";
