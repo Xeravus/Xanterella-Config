@@ -5,7 +5,8 @@
   ...
 }: {
   imports = [
-    ./hardware-configuration.nix
+    # ./hardware-configuration.nix
+    ./disko.nix
     ./../../modules
     ./../../profiles/boot/boot-server.nix
     ./../../profiles/server/headless.nix
