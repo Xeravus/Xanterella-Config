@@ -1,6 +1,6 @@
 {
   config,
-  pkgs-bleeding,
+  pkgs-unstable,
   lib,
   ...
 }: {
@@ -14,7 +14,7 @@
 
   config = lib.mkIf config.xanterella.discord.enable {
     environment = {
-      systemPackages = with pkgs-bleeding; [
+      systemPackages = with pkgs-unstable; [
         discord
       ];
     };
