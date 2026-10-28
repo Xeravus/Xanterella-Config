@@ -8,6 +8,9 @@
       inkscape = {
         enable = true;
       };
+      davinci = {
+        enable = true;
+      };
     };
   };
 }

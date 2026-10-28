@@ -9,7 +9,6 @@
 in {
   imports = [
     ./../../modules
-    ./../../profiles/desktops/gnome.nix
     ./../../profiles/apps/installer-apps.nix
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
   ];
