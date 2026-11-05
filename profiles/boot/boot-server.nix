@@ -26,9 +26,6 @@
       network = {
         enable = true;
       };
-      kitty = {
-        enable = true;
-      };
       yazi = {
         enable = true;
       };
