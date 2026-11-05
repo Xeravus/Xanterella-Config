@@ -1,7 +1,7 @@
 {
   config,
   pkgs,
-  pkgs-unstable,
+  pkgs-bleeding,
   lib,
   ...
 }: {
@@ -14,12 +14,8 @@
   };
 
   config = lib.mkIf config.xanterella.attic.enable {
-    networking = {
-      nameservers = ["100.100.100.100"];
-      search = ["gute-nessie.ts.net"];
-    };
     environment = {
-      systemPackages = with pkgs-unstable; [
+      systemPackages = with pkgs-bleeding; [
         attic-client
       ];
     };
@@ -45,9 +41,9 @@
               "network-online.target"
             ];
             serviceConfig = {
-              ExecStart = "${pkgs.attic-client}/bin/attic watch-store xanterella:main -j 1";
+              ExecStart = "${pkgs-bleeding.attic-client}/bin/attic watch-store xanterella:main -j 5";
               Restart = "always";
-              RestartSec = "10";
+              RestartSec = "600";
             };
           };
         };

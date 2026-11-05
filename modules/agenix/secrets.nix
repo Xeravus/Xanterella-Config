@@ -5,18 +5,24 @@ let
   ];
 
   xeravus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzkvv1qjg8y//HRhcyEoZ7luoVhBNgqvJ1HIzceAVu1";
-  lutik = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFxZS/IOSqNcBYlg1oCDUIzqURCiNoQTmdXXQKcSfMpY";
-  swetik = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIKI1mJ/Bawht6CD7Z745X8oOD4vD0xJy+y8bNSZda5x";
-  xorus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILRuBimJgERluZGC7Jo1cd/DODfgiFJ6C8ScosEfgLEk";
+  alpha = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFxZS/IOSqNcBYlg1oCDUIzqURCiNoQTmdXXQKcSfMpY";
+  beta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIKI1mJ/Bawht6CD7Z745X8oOD4vD0xJy+y8bNSZda5x";
+  delta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOCigT6D7osMF2hsEmha+SMBmAf0WPUGUcVUVDd4axd2";
+  epsilon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHKKiPqzLtdo4cM2kSwMmuY1C5c+CbWUkEPLDPgXPwrl";
+  zeta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILUsTWFO+wOP7jOgkTNFj0mMOF+2NDQxuqWjEOzg3a8M";
+  omega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILRuBimJgERluZGC7Jo1cd/DODfgiFJ6C8ScosEfgLEk";
   systems = [
     xeravus
-    lutik
-    xorus
-    swetik
+    alpha
+    omega
+    beta
   ];
   server = [
-    lutik
-    swetik
+    alpha
+    beta
+    delta
+    epsilon
+    zeta
     xeravus
   ];
 in {
@@ -35,25 +41,19 @@ in {
   "couchdb.env.age" = {
     publicKeys = users ++ server;
   };
-  "arcane-token-lutik.env.age" = {
+  "arcane-token-alpha.env.age" = {
     publicKeys = users ++ server;
   };
-  "arcane-token-swetik.env.age" = {
+  "arcane-token-beta.env.age" = {
     publicKeys = users ++ server;
   };
   "rclone.conf.age" = {
     publicKeys = users ++ server;
   };
+  "minecraft-rcone.age" = {
+    publicKeys = users ++ server;
+  };
   "matrix.yaml.age" = {
-    publicKeys = users ++ server;
-  };
-  "mautrix_disord.env.age" = {
-    publicKeys = users ++ server;
-  };
-  "mautrix_whatsapp.env.age" = {
-    publicKeys = users ++ server;
-  };
-  "matrix-opsbot-token.age" = {
     publicKeys = users ++ server;
   };
   "netbird.env.age" = {
@@ -64,6 +64,9 @@ in {
   };
   "immich.env.age" = {
     publicKeys = users ++ systems;
+  };
+  "immich-api-key.age" = {
+    publicKeys = users ++ server;
   };
   "yt-cookie.txt.age" = {
     publicKeys = users ++ server;

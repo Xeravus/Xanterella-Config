@@ -24,6 +24,9 @@
         system = system;
         config = {
           allowUnfree = true;
+          permittedInsecurePackages = [
+            "olm-3.2.16"
+          ];
         };
       };
     };
@@ -49,7 +52,7 @@
             ./../hosts/xeravus/configuration.nix
           ];
         });
-      swetik = withSystem "x86_64-linux" ({
+      beta = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
         pkgs-bleeding,
@@ -65,7 +68,68 @@
           };
           modules = [
             inputs.disko.nixosModules.disko
-            ./../hosts/swetik/configuration.nix
+            ./../hosts/beta/configuration.nix
+            ./../profiles/ssh-keys.nix
+          ];
+        });
+      delta = withSystem "x86_64-linux" ({
+        pkgs-new,
+        pkgs-unstable,
+        pkgs-bleeding,
+        ...
+      }:
+        inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inputs = inputs;
+            pkgs-new = pkgs-new;
+            pkgs-unstable = pkgs-unstable;
+            pkgs-bleeding = pkgs-bleeding;
+          };
+          modules = [
+            inputs.disko.nixosModules.disko
+            ./../hosts/delta/configuration.nix
+            ./../profiles/ssh-keys.nix
+          ];
+        });
+      epsilon = withSystem "x86_64-linux" ({
+        pkgs-new,
+        pkgs-unstable,
+        pkgs-bleeding,
+        ...
+      }:
+        inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inputs = inputs;
+            pkgs-new = pkgs-new;
+            pkgs-unstable = pkgs-unstable;
+            pkgs-bleeding = pkgs-bleeding;
+          };
+          modules = [
+            inputs.disko.nixosModules.disko
+            ./../hosts/epsilon/configuration.nix
+            ./../profiles/ssh-keys.nix
+          ];
+        });
+      zeta = withSystem "x86_64-linux" ({
+        pkgs-new,
+        pkgs-unstable,
+        pkgs-bleeding,
+        ...
+      }:
+        inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inputs = inputs;
+            pkgs-new = pkgs-new;
+            pkgs-unstable = pkgs-unstable;
+            pkgs-bleeding = pkgs-bleeding;
+          };
+          modules = [
+            inputs.disko.nixosModules.disko
+            ./../hosts/zeta/configuration.nix
+            ./../profiles/ssh-keys.nix
           ];
         });
       xorus = withSystem "x86_64-linux" ({
@@ -85,6 +149,7 @@
           modules = [
             inputs.disko.nixosModules.disko
             ./../hosts/xorus/configuration.nix
+            ./../profiles/ssh-keys.nix
           ];
         });
       installer = withSystem "x86_64-linux" ({
@@ -104,27 +169,6 @@
           modules = [
             ./../hosts/installer/configuration.nix
             ./../profiles/ssh-keys.nix
-          ];
-        });
-      vicuna-image = withSystem "aarch64-linux" ({
-        pkgs-new,
-        pkgs-unstable,
-        pkgs-bleeding,
-        ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            ./../hosts/vicuna/configuration.nix
-            ./../profiles/ssh-keys.nix
-            inputs.nixos-hardware.nixosModules.raspberry-pi-5
-            "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
           ];
         });
       crylia = withSystem "x86_64-linux" ({

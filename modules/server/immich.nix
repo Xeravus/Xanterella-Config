@@ -1,6 +1,8 @@
 {
   config,
   pkgs-new,
+  pkgs-unstable,
+  pkgs,
   lib,
   ...
 }: let
@@ -57,7 +59,7 @@ in {
               volumes = ["/mnt/server-data/immich/db:/var/lib/postgresql/data"];
             };
             immich-server = {
-              image = "ghcr.io/immich-app/immich-server:v3.3.1";
+              image = "ghcr.io/immich-app/immich-server:v3.3.3";
               dependsOn = ["immich-postgres" "immich-redis"];
               ports = [
                 "0.0.0.0:2283:2283"
@@ -82,6 +84,9 @@ in {
       networking = {
         firewall = {
           trustedInterfaces = ["podman0" "tailscale0"];
+          allowedTCPPorts = [
+            2283
+          ];
         };
       };
       systemd = {
@@ -102,6 +107,22 @@ in {
             file = ./../agenix/immich.env.age;
           };
         };
+      };
+      hardware = {
+        graphics = {
+          enable = true;
+          enable32Bit = true;
+          extraPackages = with pkgs; [
+            intel-media-driver
+            vulkan-loader
+            vulkan-validation-layers
+          ];
+        };
+      };
+      environment = {
+        systemPackages = with pkgs-unstable; [
+          realesrgan-ncnn-vulkan
+        ];
       };
       virtualisation = {
         podman = {

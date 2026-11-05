@@ -26,6 +26,9 @@
       bash = {
         enable = true;
       };
+      btop = {
+        enable = true;
+      };
     };
   };
 }

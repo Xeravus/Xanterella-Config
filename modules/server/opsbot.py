@@ -11,9 +11,9 @@ async def main():
         print("Fehler: Token-Datei nicht gefunden!")
         sys.exit(1)
 
-    client = AsyncClient("https://lutik.gute-nessie.ts.net", "@opsbot:lutik.gute-nessie.ts.net")
+    client = AsyncClient("https://alpha.gute-nessie.ts.net", "@opsbot:alpha.gute-nessie.ts.net")
     client.access_token = token
-    ALLOWED_USER = "@xeravus:lutik.gute-nessie.ts.net"
+    ALLOWED_USER = "@xeravus:alpha.gute-nessie.ts.net"
 
     async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
         if event.sender != ALLOWED_USER:

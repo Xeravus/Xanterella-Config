@@ -3,6 +3,7 @@
   pkgs,
   lib,
   pkgs-unstable,
+  pkgs-bleeding,
   ...
 }: let
   cfg = config.xanterella.matrix-server;
@@ -14,12 +15,11 @@ in {
         enable = lib.mkEnableOption "Aktiviert Matrix Pipeline";
         domain = lib.mkOption {
           type = lib.types.str;
-          default = "${nodeCfg.tailscale-domain}";
+          default = "matrix.${nodeCfg.domain}";
         };
       };
     };
   };
-
   config = lib.mkIf (cfg.enable && nodeCfg.enable) {
     age = {
       secrets = {
@@ -27,16 +27,6 @@ in {
           file = ./../agenix/matrix.yaml.age;
           owner = "matrix-synapse";
           group = "matrix-synapse";
-        };
-        discord_secrets = {
-          file = ./../agenix/mautrix_disord.env.age;
-          owner = "mautrix-discord";
-          group = "mautrix-discord";
-        };
-        whatsapp_secrets = {
-          file = ./../agenix/mautrix_whatsapp.env.age;
-          owner = "mautrix-whatsapp";
-          group = "mautrix-whatsapp";
         };
       };
     };
@@ -82,19 +72,30 @@ in {
           config.age.secrets.matrix-password.path
         ];
       };
-
       mautrix-whatsapp = {
         enable = true;
-        package = pkgs-unstable.mautrix-whatsapp;
-        environmentFile = config.age.secrets.whatsapp_secrets.path;
+        package = pkgs-bleeding.mautrix-whatsapp;
+        settings = {
+          homeserver = {
+            address = "http://127.0.0.1:8008";
+            domain = cfg.domain;
+          };
+          bridge = {
+            permissions = {
+              "@xeravus:${cfg.domain}" = "admin";
+            };
+          };
+        };
+      };
+      mautrix-discord = {
+        enable = true;
+        package = pkgs-bleeding.mautrix-discord;
         settings = {
           appservice = {
-            as_token = "$MAUTRIX_WHATSAPP_APPSERVICE_AS_TOKEN";
-            hs_token = "$MAUTRIX_WHATSAPP_APPSERVICE_HS_TOKEN";
-          };
-          database = {
-            type = "postgres";
-            uri = "postgres://mautrix-whatsapp@/mautrix-whatsapp?host=/run/postgresql";
+            database = {
+              type = "postgres";
+              uri = "postgres://mautrix-discord@/mautrix-discord?host=/run/postgresql";
+            };
           };
           homeserver = {
             address = "http://127.0.0.1:8008";
@@ -107,40 +108,35 @@ in {
           };
         };
       };
-
-      mautrix-discord = {
-        enable = true;
-        environmentFile = config.age.secrets.discord_secrets.path;
-        settings = {
-          appservice = {
-            as_token = "$MAUTRIX_DISCORD_APPSERVICE_AS_TOKEN";
-            hs_token = "$MAUTRIX_DISCORD_APPSERVICE_HS_TOKEN";
-            database = {
-              type = "postgres";
-              uri = "postgres://mautrix-discord@/mautrix-discord?host=/run/postgresql";
-            };
-          };
-          homeserver = {
-            address = "http://127.0.0.1:8008";
-            domain = config.xanterella.matrix-server.domain;
-          };
-          bridge = {
-            permissions = {
-              "@xeravus:${cfg.domain}" = "admin";
-            };
-          };
-        };
-      };
       caddy = {
         enable = true;
         virtualHosts = {
-          "https://lutik.gute-nessie.ts.net" = {
+          "http://matrix.xanterella.de" = {
             extraConfig = ''
-              handle /_matrix* {
-              reverse_proxy 127.0.0.1:8008
+              reverse_proxy /_matrix* 127.0.0.1:8008
+              reverse_proxy /_synapse/client* 127.0.0.1:8008
+
+              handle /.well-known/matrix/client {
+                header Access-Control-Allow-Origin "*"
+                header Content-Type "application/json"
+                respond `{
+                  "m.homeserver": {
+                    "base_url": "https://matrix.xanterella.de"
+                  }
+                }`
               }
-              handle /_synapse/client* {
-              reverse_proxy 127.0.0.1:8008
+            '';
+          };
+          "http://xanterella.de" = {
+            extraConfig = ''
+              handle /.well-known/matrix/client {
+                header Access-Control-Allow-Origin "*"
+                header Content-Type "application/json"
+                respond `{
+                  "m.homeserver": {
+                    "base_url": "https://matrix.xanterella.de"
+                  }
+                }`
               }
             '';
           };
@@ -149,6 +145,15 @@ in {
       tailscale = {
         enable = true;
         permitCertUid = "caddy";
+      };
+    };
+    systemd = {
+      services = {
+        matrix-synapse = {
+          serviceConfig = {
+            TimeoutStartSec = "180s";
+          };
+        };
       };
     };
     users = {
@@ -164,14 +169,6 @@ in {
       firewall = {
         allowedTCPPorts = [
           1007
-        ];
-      };
-    };
-
-    nixpkgs = {
-      config = {
-        permittedInsecurePackages = [
-          "olm-3.2.16"
         ];
       };
     };

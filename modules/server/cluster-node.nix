@@ -35,7 +35,7 @@ in {
     (lib.mkIf config.xanterella.cluster-node.enable {
       xanterella = {
         arcane-agent = {
-          enable = true;
+          enable = false;
         };
       };
       networking = {

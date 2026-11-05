@@ -25,23 +25,14 @@
     export ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump-$HOST-$ZSH_VERSION"
     export DIRENV_LOG_FORMAT=""
 
-    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-    fi
+    #if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+    #  source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+    #fi
 
-    eval "$(zoxide init zsh)"
-
-    # 2. Theme laden (direkt aus den Flake Inputs)
-    source ${inputs.p10k-src}/powerlevel10k.zsh-theme
-
-    # 3. Config laden
-    source ${p10kConf}
-
-    # 4. Yazi anhängen
+    #source ${inputs.p10k-src}/powerlevel10k.zsh-theme
+    #source ${p10kConf}
     ${yaziFunc}
-
-    # 5. Sauberer Abschluss (Exakt am Ende der Datei, genau wie P10k es verlangt!)
-    (( ! ''${+functions[p10k]} )) || p10k finalize
+    #(( ! ''${+functions[p10k]} )) || p10k finalize
   '';
 in {
   options = {
@@ -59,7 +50,6 @@ in {
     (lib.mkIf config.xanterella.zsh.enable {
       environment = {
         systemPackages = with pkgs; [
-          zsh-powerlevel10k
           bat
           eza
           jq
@@ -101,9 +91,9 @@ in {
           ];
 
           shellAliases = {
-            l = "eza -lha";
-            ls = "eza";
-            z = "zoxide";
+            l = "eza --icons -lha";
+            ls = "eza --icons";
+            tree = "eza --tree --icons";
             cl = "clear";
             f = "fastfetch";
             v = "nvim";
@@ -117,9 +107,14 @@ in {
             p = "pyroclear && clear";
             cat = "bat";
             thm = "sudo openvpn ~/tryhackme/VPN/tryhackme.ovpn";
+            larp = "cargo clean -q && cargo build --vv -r";
 
-            lutik = "ssh cato@lutik";
-            swetik = "ssh cato@swetik";
+            alpha = "ssh cato@alpha";
+            beta = "ssh cato@beta";
+            gamma = "ssh cato@lacrux";
+            delta = "ssh cato@delta";
+            epsilon = "ssh cato@epsilon";
+            zeta = "ssh cato@zeta";
           };
 
           interactiveShellInit = "";
@@ -127,6 +122,89 @@ in {
         zoxide = {
           enable = true;
           enableZshIntegration = true;
+        };
+        starship = {
+          enable = true;
+          package = pkgs.starship;
+          settings = {
+            "$schema" = "https://starship.rs/schema/starship-schema.json";
+
+            format = "$custom[](bg:surface2 fg:mauve)$directory[](bg:surface1 fg:surface2)$git_branch$git_status[](bg:surface0 fg:surface1)$rust[](fg:surface0)$line_break$character";
+            palette = "catppuccin_mocha";
+
+            palettes = {
+              catppuccin_mocha = {
+                rosewater = "#f5e0dc";
+                flamingo = "#f2cdcd";
+                pink = "#f5c2e7";
+                mauve = "#cba6f7";
+                red = "#f38ba8";
+                maroon = "#eba0ac";
+                peach = "#fab387";
+                yellow = "#f9e2af";
+                green = "#a6e3a1";
+                teal = "#94e2d5";
+                sky = "#89dceb";
+                sapphire = "#74c7ec";
+                blue = "#89b4fa";
+                lavender = "#b4befe";
+                text = "#cdd6f4";
+                subtext1 = "#bac2de";
+                subtext0 = "#a6adc8";
+                overlay2 = "#9399b2";
+                overlay1 = "#7f849c";
+                overlay0 = "#6c7086";
+                surface2 = "#585b70";
+                surface1 = "#45475a";
+                surface0 = "#313244";
+                base = "#1e1e2e";
+                mantle = "#181825";
+                crust = "#11111b";
+              };
+            };
+
+            custom = {
+              username = {
+                command = ''echo "$USER@$(hostname)"'';
+                style = "bg:mauve fg:crust";
+                format = "[ $output ]($style)";
+                when = true;
+              };
+            };
+
+            directory = {
+              style = "fg:mauve bg:surface2";
+              format = "[ $path ]($style)";
+              truncation_length = 50;
+            };
+
+            git_branch = {
+              symbol = "";
+              style = "bg:surface1";
+              format = "[[ $symbol ](fg:maroon bg:surface1)]($style)";
+            };
+
+            git_status = {
+              style = "bg:surface1";
+              format = "[[($all_status$ahead_behind )](fg:maroon bg:surface1)]($style)";
+            };
+
+            rust = {
+              symbol = "";
+              style = "bg:surface0";
+              format = "[[ $symbol( $version) ](fg:peach bg:surface0)]($style)";
+            };
+
+            line_break = {
+              disabled = false;
+            };
+
+            character = {
+              disabled = false;
+              success_symbol = "[>](bold fg:teal)";
+              error_symbol = "[>](bold fg:red)";
+            };
+          };
         };
       };
 

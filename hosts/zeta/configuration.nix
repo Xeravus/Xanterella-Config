@@ -9,10 +9,10 @@
     ./../../modules
     ./../../profiles/boot/boot-server.nix
     ./../../profiles/server/headless.nix
-    ./../../profiles/apps/lutik-apps.nix
+    ./../../profiles/apps/zeta-apps.nix
   ];
   networking = {
-    hostName = "lutik";
+    hostName = "zeta";
   };
   system = {
     stateVersion = "26.05";

@@ -1,6 +1,6 @@
 {
   config,
-  pkgs-unstable,
+  pkgs-bleeding,
   lib,
   pkgs,
   ...
@@ -24,7 +24,7 @@ in {
     services = {
       atticd = {
         enable = true;
-        package = pkgs-unstable.attic-server;
+        package = pkgs-bleeding.attic-server;
         environmentFile = "/root/secrets/atticd.env";
         settings = {
           listen = "0.0.0.0:6000";
@@ -72,7 +72,7 @@ in {
       };
     };
     environment = {
-      systemPackages = with pkgs-unstable; [
+      systemPackages = with pkgs-bleeding; [
         openssl
       ];
     };

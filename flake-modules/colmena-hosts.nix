@@ -13,9 +13,6 @@
       system = systemarch;
       config = {
         allowUnfree = true;
-        permittedInsecurePackages = [
-          "docker-28.5.2"
-        ];
       };
       purity = "impure";
     };
@@ -45,21 +42,21 @@
       ./../profiles/ssh-keys.nix
     ];
   };
-  swetik = {
+  beta = {
     deployment = {
-      targetHost = "swetik";
+      targetHost = "beta";
       targetUser = taruser;
       buildOnTarget = false;
       keys = commonSSHKeys;
     };
     imports = [
-      ./../hosts/swetik/configuration.nix
+      ./../hosts/beta/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
   };
-  xorus = {
+  omega = {
     deployment = {
-      targetHost = "192.168.178.69";
+      targetHost = "omega";
       targetUser = taruser;
       buildOnTarget = false;
       keys = commonSSHKeys;
@@ -69,15 +66,54 @@
       ./../profiles/ssh-keys.nix
     ];
   };
-  lutik = {
+  alpha = {
     deployment = {
-      targetHost = "lutik";
+      targetHost = "alpha";
       targetUser = taruser;
       buildOnTarget = false;
       keys = commonSSHKeys;
     };
     imports = [
-      ./../hosts/lutik/configuration.nix
+      ./../hosts/alpha/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
+  delta = {
+    deployment = {
+      targetHost = "delta";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      inputs.disko.nixosModules.disko
+      ./../hosts/alpha/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
+  epsilon = {
+    deployment = {
+      targetHost = "epsilon";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      inputs.disko.nixosModules.disko
+      ./../hosts/epsilon/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
+  zeta = {
+    deployment = {
+      targetHost = "zeta";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      inputs.disko.nixosModules.disko
+      ./../hosts/zeta/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
   };
