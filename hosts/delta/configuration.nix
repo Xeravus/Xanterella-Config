@@ -16,6 +16,6 @@
     hostName = "delta";
   };
   system = {
-    stateVersion = "26.05";
+    stateVersion = "25.11";
   };
 }
