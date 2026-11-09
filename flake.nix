@@ -72,10 +72,6 @@
       url = "github:Infinidoge/nix-minecraft";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    p10k-src = {
-      url = "github:romkatv/powerlevel10k";
-      flake = false;
-    };
     xanterella-etc = {
       url = "github:Xeravus/Xanterella-Etc";
       flake = false;

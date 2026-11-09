@@ -5,8 +5,6 @@
   inputs,
   ...
 }: let
-  p10kConf = ./p10k.zsh;
-
   yaziFunc = ''
     function y() {
       local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -25,14 +23,7 @@
     export ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump-$HOST-$ZSH_VERSION"
     export DIRENV_LOG_FORMAT=""
 
-    #if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-    #  source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-    #fi
-
-    #source ${inputs.p10k-src}/powerlevel10k.zsh-theme
-    #source ${p10kConf}
     ${yaziFunc}
-    #(( ! ''${+functions[p10k]} )) || p10k finalize
   '';
 in {
   options = {
@@ -108,6 +99,7 @@ in {
             cat = "bat";
             thm = "sudo openvpn ~/tryhackme/VPN/tryhackme.ovpn";
             larp = "cargo clean -q && cargo build --vv -r";
+            immich-upload = "nix-shell -p immich-cli --run \"immich upload /home/cato/mount/DCIM/113___11/ -r\"";
 
             alpha = "ssh cato@alpha";
             beta = "ssh cato@beta";
