@@ -51,9 +51,6 @@
       prometheus = {
         enable = true;
       };
-      netbird = {
-        enable = true;
-      };
     };
   };
 }

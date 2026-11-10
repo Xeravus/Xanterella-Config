@@ -21,7 +21,7 @@
     };
   };
 in {
-  flake = {
+  flake = rec {
     colmena = withSystem systemarch ({
       pkgs-new,
       pkgs-unstable,
@@ -37,5 +37,7 @@ in {
         pkgs-unstable = pkgs-unstable;
         pkgs-bleeding = pkgs-bleeding;
       });
+
+    colmenaHive = inputs.colmena.lib.makeHive colmena;
   };
 }

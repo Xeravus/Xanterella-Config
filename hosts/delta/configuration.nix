@@ -5,8 +5,8 @@
   ...
 }: {
   imports = [
-    #./hardware-configuration.nix
-    ./disko.nix
+    ./hardware-configuration.nix
+    #./disko.nix
     ./../../modules
     ./../../profiles/boot/boot-server.nix
     ./../../profiles/server/headless.nix
@@ -16,6 +16,6 @@
     hostName = "delta";
   };
   system = {
-    stateVersion = "25.11";
+    stateVersion = "26.05";
   };
 }

@@ -7,15 +7,18 @@ let
   xeravus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzkvv1qjg8y//HRhcyEoZ7luoVhBNgqvJ1HIzceAVu1";
   alpha = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFxZS/IOSqNcBYlg1oCDUIzqURCiNoQTmdXXQKcSfMpY";
   beta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIKI1mJ/Bawht6CD7Z745X8oOD4vD0xJy+y8bNSZda5x";
-  delta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOCigT6D7osMF2hsEmha+SMBmAf0WPUGUcVUVDd4axd2";
-  epsilon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHKKiPqzLtdo4cM2kSwMmuY1C5c+CbWUkEPLDPgXPwrl";
-  zeta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILUsTWFO+wOP7jOgkTNFj0mMOF+2NDQxuqWjEOzg3a8M";
+  delta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFFeIIC03+EMKX3z+jP2Z5/BTBbTKXVBc55aPrGMnPBQ";
+  epsilon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKYRML/ER6FVA94fQNtioIKOpq4OX3Ewu/Y1DJcNfC1F";
+  zeta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH0yQPa0pLkli9ff1ryMRwFKGdOVpSVI1RraSxHPWhjA";
   omega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILRuBimJgERluZGC7Jo1cd/DODfgiFJ6C8ScosEfgLEk";
   systems = [
     xeravus
     alpha
-    omega
     beta
+    delta
+    epsilon
+    zeta
+    omega
   ];
   server = [
     alpha
