@@ -5,12 +5,12 @@
   ...
 }: {
   imports = [
-    ./hardware-configuration.nix
+    #./hardware-configuration.nix
+    ./disko-config.nix
     ./../../modules
     ./../../profiles/boot/boot-server.nix
     ./../../profiles/server/headless.nix
     ./../../profiles/apps/epsilon-apps.nix
-    #./disko-config.nix
   ];
   networking = {
     hostName = "epsilon";
