@@ -27,6 +27,9 @@
       prometheus = {
         enable = true;
       };
+      garage = {
+        enable = true;
+      };
     };
   };
 }

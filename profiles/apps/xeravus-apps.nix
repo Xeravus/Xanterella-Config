@@ -7,8 +7,11 @@
   config = {
     xanterella = {
       cluster-node = {
-        enable = false;
+        enable = true;
         domain = "xeravus.gute-nessie.ts.net";
+      };
+      garage = {
+        enable = true;
       };
       ani-cli = {
         enable = true;
@@ -22,9 +25,6 @@
         };
       };
       brightnessctl = {
-        enable = true;
-      };
-      jellyfin-bucket = {
         enable = true;
       };
       fastfetch = {

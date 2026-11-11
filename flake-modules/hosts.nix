@@ -17,6 +17,7 @@
           allowUnfree = true;
           permittedInsecurePackages = [
             "olm-3.2.16"
+            "garage-1.3.1"
           ];
         };
       };

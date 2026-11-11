@@ -7,7 +7,7 @@ let
   xeravus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzkvv1qjg8y//HRhcyEoZ7luoVhBNgqvJ1HIzceAVu1";
   alpha = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFxZS/IOSqNcBYlg1oCDUIzqURCiNoQTmdXXQKcSfMpY";
   beta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIKI1mJ/Bawht6CD7Z745X8oOD4vD0xJy+y8bNSZda5x";
-  delta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFFeIIC03+EMKX3z+jP2Z5/BTBbTKXVBc55aPrGMnPBQ";
+  delta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbc635N+PoqYUcqG8sMxstYlMA3e3oY3YKm9Xb9w5jZ";
   epsilon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKYRML/ER6FVA94fQNtioIKOpq4OX3Ewu/Y1DJcNfC1F";
   zeta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH0yQPa0pLkli9ff1ryMRwFKGdOVpSVI1RraSxHPWhjA";
   omega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILRuBimJgERluZGC7Jo1cd/DODfgiFJ6C8ScosEfgLEk";
@@ -64,6 +64,9 @@ in {
   };
   "paperless-pass.age" = {
     publicKeys = users ++ systems;
+  };
+  "s3.env.age" = {
+    publicKeys = users ++ server;
   };
   "immich.env.age" = {
     publicKeys = users ++ systems;

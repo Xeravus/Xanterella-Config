@@ -23,5 +23,6 @@
     ./matrix-server.nix
     ./homarr.nix
     ./attic-server.nix
+    ./garage.nix
   ];
 }
