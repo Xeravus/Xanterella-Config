@@ -35,7 +35,8 @@ in {
           metadata_dir = "/mnt/server-data/garage/meta";
           data_dir = "/mnt/server-data/garage/data";
           db_engine = "sqlite";
-          replication_level = 3;
+
+          replication_factor = 1;
           consistency_mode = "consistent";
 
           # Cluster-Kommunikation (RPC)
@@ -70,13 +71,14 @@ in {
           description = "Prepare Directories for Garage Object Storage";
           before = ["garage.service"];
           requiredBy = ["garage.service"];
+          unitConfig = {
+            RequiresMountsFor = "/mnt/server-data";
+          };
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
-            # Erstellt die Verzeichnisse als root, bevor Garage startet
-            ExecStart = "${pkgs.coreutils}/bin/mkdir -p /mnt/server-data/garage/meta /mnt/server-data/garage/data";
-            # Übergibt die Rechte an den Garage-User
-            ExecStartPost = "${pkgs.coreutils}/bin/chown -R garage:garage /mnt/server-data/garage";
+            User = "root";
+            ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/mkdir -p /mnt/server-data/garage/{meta,data} && ${pkgs.coreutils}/bin/chown -R garage:garage /mnt/server-data/garage && ${pkgs.coreutils}/bin/chmod -R 0700 /mnt/server-data/garage'";
           };
         };
       };
