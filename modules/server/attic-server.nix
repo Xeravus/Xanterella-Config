@@ -21,6 +21,17 @@ in {
   };
 
   config = lib.mkIf (cfg.enable && nodeCfg.enable) {
+    services.postgresql = {
+      enable = true;
+      package = pkgs.postgresql_16; # Oder deine gewünschte Version
+      ensureDatabases = ["attic"];
+      ensureUsers = [
+        {
+          name = "attic";
+          ensureDBOwnership = true;
+        }
+      ];
+    };
     services = {
       atticd = {
         enable = true;
@@ -29,7 +40,7 @@ in {
         settings = {
           listen = "0.0.0.0:6000";
           database = {
-            url = "sqlite:///mnt/server-data/attic/server.db";
+            url = "postgres:///attic?host=/var/run/postgresql";
           };
           storage = {
             type = "local";
