@@ -23,7 +23,7 @@ in {
   config = lib.mkIf (cfg.enable && nodeCfg.enable) {
     services.postgresql = {
       enable = true;
-      package = pkgs.postgresql_16; # Oder deine gewünschte Version
+      package = pkgs.postgresql_16;
       ensureDatabases = ["attic"];
       ensureUsers = [
         {
@@ -40,7 +40,7 @@ in {
         settings = {
           listen = "0.0.0.0:6000";
           database = {
-            url = "postgres:///attic?host=/var/run/postgresql";
+            url = "postgres:///attic?host=/var/run/postgresql&user=attic";
           };
           storage = {
             type = "local";
