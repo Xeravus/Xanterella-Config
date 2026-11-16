@@ -3,9 +3,6 @@
   lib,
   ...
 }: {
-  imports = [
-    ./desktop.nix
-  ];
   config = {
     xanterella = {
       gdm = {
@@ -19,4 +16,7 @@
       };
     };
   };
+  imports = [
+    ./desktop.nix
+  ];
 }

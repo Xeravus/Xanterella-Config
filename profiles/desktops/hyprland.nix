@@ -3,9 +3,6 @@
   lib,
   ...
 }: {
-  imports = [
-    ./desktop.nix
-  ];
   config = {
     xanterella = {
       gnome-keyring = {
@@ -20,15 +17,18 @@
       nix-timetracker = {
         enable = true;
       };
+      noctalia = {
+        enable = true;
+      };
       screenshots = {
         enable = true;
       };
       sddm = {
         enable = true;
       };
-      noctalia = {
-        enable = true;
-      };
     };
   };
+  imports = [
+    ./desktop.nix
+  ];
 }

@@ -3,13 +3,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      mount-games = {
-        enable = lib.mkEnableOption "Aktiviert einen automatischen mount für eine Game SSD";
-      };
-    };
-  };
   config = lib.mkMerge [
     (lib.mkIf config.xanterella.mount-games.enable {
       fileSystems = {
@@ -24,4 +17,11 @@
       };
     })
   ];
+  options = {
+    xanterella = {
+      mount-games = {
+        enable = lib.mkEnableOption "Aktiviert einen automatischen mount für eine Game SSD";
+      };
+    };
+  };
 }

@@ -6,19 +6,18 @@
   inputs,
   ...
 }: {
-  options = {
-    xanterella = {
-      alejandra = {
-        enable = lib.mkEnableOption "Aktiviert Alejandra";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.alejandra.enable {
     environment = {
       systemPackages = with pkgs-unstable; [
         inputs.alejandra.defaultPackage.${pkgs.system}
       ];
+    };
+  };
+  options = {
+    xanterella = {
+      alejandra = {
+        enable = lib.mkEnableOption "Aktiviert Alejandra";
+      };
     };
   };
 }

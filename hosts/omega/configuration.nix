@@ -13,11 +13,10 @@
     ./../../profiles/apps/omega-apps.nix
     ./../../profiles/desktops/hyprland.nix
   ];
-
   networking = {
     hostName = "xorus";
   };
   system = {
-    stateVersion = "25.11"; # Did you read the comment?
+    stateVersion = "25.11";
   };
 }

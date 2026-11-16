@@ -8,6 +8,17 @@
       direnv = {
         enable = true;
       };
+      github-runner = {
+        "fast_builder" = {
+          labels = [
+            "nixos"
+            "self-hosted"
+            "xanterella"
+            "fast"
+          ];
+          url = "https://github.com/Xeravus/Xanterella-Cli";
+        };
+      };
       lazysql = {
         enable = true;
       };
@@ -17,25 +28,14 @@
       nodejs = {
         enable = true;
       };
-      vimgolf = {
+      tokei = {
         enable = true;
       };
-      tokei = {
+      vimgolf = {
         enable = true;
       };
       vscode = {
         enable = true;
-      };
-      github-runner = {
-        "fast_builder" = {
-          url = "https://github.com/Xeravus/Xanterella-Cli";
-          labels = [
-            "nixos"
-            "self-hosted"
-            "xanterella"
-            "fast"
-          ];
-        };
       };
     };
   };

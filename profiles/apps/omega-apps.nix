@@ -6,24 +6,24 @@
 }: {
   config = {
     xanterella = {
+      brightnessctl = {
+        enable = true;
+      };
       browser = {
-        zen = {
-          enable = true;
-        };
         librewolf = {
           enable = true;
         };
+        zen = {
+          enable = true;
+        };
       };
-      brightnessctl = {
+      direnv = {
         enable = true;
       };
       fastfetch = {
         enable = true;
       };
       spicetify = {
-        enable = true;
-      };
-      direnv = {
         enable = true;
       };
     };

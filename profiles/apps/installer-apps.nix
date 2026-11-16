@@ -5,16 +5,10 @@
 }: {
   config = {
     xanterella = {
-      tailscale-installer = {
+      bash = {
         enable = true;
       };
-      network-installer = {
-        enable = true;
-      };
-      ssh-installer = {
-        enable = true;
-      };
-      local = {
+      btop = {
         enable = true;
       };
       geistmono = {
@@ -23,10 +17,16 @@
       kitty = {
         enable = true;
       };
-      bash = {
+      local = {
         enable = true;
       };
-      btop = {
+      network-installer = {
+        enable = true;
+      };
+      ssh-installer = {
+        enable = true;
+      };
+      tailscale-installer = {
         enable = true;
       };
     };

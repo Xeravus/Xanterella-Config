@@ -5,30 +5,33 @@
 }: {
   config = {
     xanterella = {
+      arm = {
+        enable = true;
+      };
+      btop = {
+        enable = true;
+      };
       cluster-node = {
+        enable = true;
+      };
+      fastfetch = {
         enable = true;
       };
       github-runner = {
         "default_builder" = {
-          url = "https://github.com/Xeravus/Xanterella-Cli";
           labels = [
             "nixos"
             "fast"
             "self-hosted"
             "xanterella"
           ];
+          url = "https://github.com/Xeravus/Xanterella-Cli";
         };
       };
+      immich-ml = {
+        enable = true;
+      };
       jellyfin = {
-        enable = true;
-      };
-      arm = {
-        enable = true;
-      };
-      fastfetch = {
-        enable = true;
-      };
-      btop = {
         enable = true;
       };
       minecraft-server = {
@@ -38,9 +41,6 @@
         enable = true;
       };
       stress = {
-        enable = true;
-      };
-      immich-ml = {
         enable = true;
       };
     };

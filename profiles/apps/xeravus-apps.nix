@@ -6,23 +6,23 @@
 }: {
   config = {
     xanterella = {
-      cluster-node = {
-        enable = false;
-        domain = "xeravus.gute-nessie.ts.net";
-      };
       ani-cli = {
         enable = true;
       };
+      brightnessctl = {
+        enable = true;
+      };
       browser = {
-        zen = {
-          enable = true;
-        };
         librewolf = {
           enable = true;
         };
+        zen = {
+          enable = true;
+        };
       };
-      brightnessctl = {
-        enable = true;
+      cluster-node = {
+        domain = "xeravus.gute-nessie.ts.net";
+        enable = false;
       };
       fastfetch = {
         enable = true;

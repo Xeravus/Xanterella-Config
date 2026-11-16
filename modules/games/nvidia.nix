@@ -5,15 +5,19 @@
   pkgs-unstable,
   ...
 }: {
-  options = {
-    xanterella = {
-      nvidia = {
-        enable = lib.mkEnableOption "Aktiviere Nvidia Support und Nvidia Driver";
+  config = lib.mkIf config.xanterella.nvidia.enable {
+    boot = {
+      kernelParams = [
+        "nvidia-drm.modeset=1"
+      ];
+    };
+    environment = {
+      sessionVariables = {
+        GDM_BACKEND = "nvidia-drm";
+        LIBVA_DRIVE_NAME = "nvidia";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       };
     };
-  };
-
-  config = lib.mkIf config.xanterella.nvidia.enable {
     hardware = {
       graphics = {
         enable = true;
@@ -22,38 +26,35 @@
         ];
       };
       nvidia = {
-        open = true;
         modesetting = {
           enable = true;
         };
+        open = true;
         powerManagement = {
           enable = true;
         };
         prime = {
+          intelBusId = "PCI:0:2:0";
+          nvidiaBusId = "PCI:1:0:0";
           sync = {
             enable = true;
           };
-          intelBusId = "PCI:0:2:0";
-          nvidiaBusId = "PCI:1:0:0";
         };
       };
     };
     services = {
       xserver = {
         enable = true;
-        videoDrivers = ["nvidia"];
+        videoDrivers = [
+          "nvidia"
+        ];
       };
     };
-    boot = {
-      kernelParams = [
-        "nvidia-drm.modeset=1"
-      ];
-    };
-    environment = {
-      sessionVariables = {
-        LIBVA_DRIVE_NAME = "nvidia";
-        GDM_BACKEND = "nvidia-drm";
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  };
+  options = {
+    xanterella = {
+      nvidia = {
+        enable = lib.mkEnableOption "Aktiviere Nvidia Support und Nvidia Driver";
       };
     };
   };

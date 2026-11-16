@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      stay-on = {
-        enable = lib.mkEnableOption "Lässt das Gerät nicht ausgehen";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.stay-on.enable {
     boot = {
       kernelParams = [
@@ -21,24 +13,31 @@
     services = {
       logind = {
         lidSwitch = "ignore";
-        lidSwitchExternalPower = "ignore";
         lidSwitchDocked = "ignore";
+        lidSwitchExternalPower = "ignore";
       };
     };
     systemd = {
       targets = {
-        sleep = {
-          enable = false;
-        };
-        suspend = {
-          enable = false;
-        };
         hibernate = {
           enable = false;
         };
         hybrid-sleep = {
           enable = false;
         };
+        sleep = {
+          enable = false;
+        };
+        suspend = {
+          enable = false;
+        };
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      stay-on = {
+        enable = lib.mkEnableOption "Lässt das Gerät nicht ausgehen";
       };
     };
   };

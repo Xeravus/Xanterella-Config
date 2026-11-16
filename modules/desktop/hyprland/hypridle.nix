@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      hypridle = {
-        enable = lib.mkEnableOption "Aktiviert hypridle";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.hypridle.enable {
     environment = {
       systemPackages = with pkgs; [
@@ -21,6 +13,13 @@
     services = {
       hypridle = {
         enable = true;
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      hypridle = {
+        enable = lib.mkEnableOption "Aktiviert hypridle";
       };
     };
   };

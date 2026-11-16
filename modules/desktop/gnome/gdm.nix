@@ -4,18 +4,9 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      gdm = {
-        enable = lib.mkEnableOption "Aktiviert gdm";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.gdm.enable {
     services = {
       xserver = {
-        enable = true;
         desktopManager = {
           gnome = {
             enable = true;
@@ -26,6 +17,14 @@
             enable = true;
           };
         };
+        enable = true;
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      gdm = {
+        enable = lib.mkEnableOption "Aktiviert gdm";
       };
     };
   };

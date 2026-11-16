@@ -4,6 +4,61 @@
   lib,
   ...
 }: {
+  config = lib.mkMerge [
+    (lib.mkIf config.xanterella.boot.enable {
+      boot = {
+        kernelPackages = pkgs.linuxPackages_6_12;
+        kernelParams = [
+          "btusb.enable_autosuspend=0"
+        ];
+        loader = {
+          efi = {
+            canTouchEfiVariables = true;
+          };
+          systemd-boot = {
+            enable = true;
+          };
+        };
+      };
+    })
+    (lib.mkIf config.xanterella.boot-server.enable {
+      boot = {
+        kernelPackages = pkgs.linuxPackages_6_12;
+        kernelParams = [
+          "btusb.enable_autosuspend=0"
+        ];
+        loader = {
+          efi = {
+            canTouchEfiVariables = true;
+          };
+          grub = {
+            enable = false;
+          };
+          systemd-boot = {
+            enable = true;
+          };
+        };
+      };
+    })
+    (lib.mkIf config.xanterella.boot-vicuna.enable {
+      boot = {
+        kernelParams = [
+          "btusb.enable_autosuspend=0"
+        ];
+        loader = {
+          efi = {
+            canTouchEfiVariables = true;
+          };
+          grub = {
+            enable = lib.mkForce false;
+          };
+          systemd-boot = {
+            enable = lib.mkForce false;
+          };
+        };
+      };
+    })
+  ];
   options = {
     xanterella = {
       boot = {
@@ -17,55 +72,4 @@
       };
     };
   };
-
-  config = lib.mkMerge [
-    (lib.mkIf config.xanterella.boot.enable {
-      boot = {
-        loader = {
-          efi = {
-            canTouchEfiVariables = true;
-          };
-          systemd-boot = {
-            enable = true;
-          };
-        };
-        kernelPackages = pkgs.linuxPackages_6_12;
-        kernelParams = ["btusb.enable_autosuspend=0"];
-      };
-    })
-
-    (lib.mkIf config.xanterella.boot-server.enable {
-      boot = {
-        loader = {
-          efi = {
-            canTouchEfiVariables = true;
-          };
-          systemd-boot = {
-            enable = true;
-          };
-          grub = {
-            enable = false;
-          };
-        };
-        kernelPackages = pkgs.linuxPackages_6_12;
-        kernelParams = ["btusb.enable_autosuspend=0"];
-      };
-    })
-    (lib.mkIf config.xanterella.boot-vicuna.enable {
-      boot = {
-        loader = {
-          efi = {
-            canTouchEfiVariables = true;
-          };
-          systemd-boot = {
-            enable = lib.mkForce false;
-          };
-          grub = {
-            enable = lib.mkForce false;
-          };
-        };
-        kernelParams = ["btusb.enable_autosuspend=0"];
-      };
-    })
-  ];
 }

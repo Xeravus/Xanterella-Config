@@ -4,23 +4,22 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
+  config = lib.mkIf config.xanterella.plymouth.enable {
+    boot = {
       plymouth = {
-        enable = lib.mkEnableOption "Aktiviert plymouth";
+        enable = true;
       };
     };
-  };
-
-  config = lib.mkIf config.xanterella.plymouth.enable {
     environment = {
       systemPackages = with pkgs; [
         plymouth
       ];
     };
-    boot = {
+  };
+  options = {
+    xanterella = {
       plymouth = {
-        enable = true;
+        enable = lib.mkEnableOption "Aktiviert plymouth";
       };
     };
   };

@@ -1,16 +1,15 @@
 {
   imports = [
-    ./hyprland
-    ./noctalia.nix
-    ./gnome
-    ./browser.nix
-    ./brightnessctl.nix
     ./bitwarden.nix
-    ./element.nix
+    ./brightnessctl.nix
+    ./browser.nix
     ./cava.nix
+    ./element.nix
     ./kitty.nix
+    ./lightdm.nix
     ./nix-switcher.nix
     ./nix-timetracker.nix
+    ./noctalia.nix
     ./plymouth.nix
     ./power-profiles-daemon.nix
     ./psmisc.nix
@@ -19,6 +18,5 @@
     ./screenshots.nix
     ./tldr.nix
     ./yazi.nix
-    ./lightdm.nix
   ];
 }

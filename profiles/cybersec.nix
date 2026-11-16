@@ -11,13 +11,7 @@
       burp-suite = {
         enable = true;
       };
-      wordlists = {
-        enable = true;
-      };
-      sqlmap = {
-        enable = true;
-      };
-      hashcat = {
+      ffuf = {
         enable = true;
       };
       git-dumper = {
@@ -26,19 +20,25 @@
       gobuster = {
         enable = true;
       };
-      ffuf = {
+      hashcat = {
+        enable = true;
+      };
+      hydra = {
         enable = true;
       };
       metasploit = {
         enable = true;
       };
-      openvpn = {
-        enable = true;
-      };
       nmap = {
         enable = true;
       };
-      hydra = {
+      openvpn = {
+        enable = true;
+      };
+      proxychains = {
+        enable = true;
+      };
+      sqlmap = {
         enable = true;
       };
       wifite = {
@@ -47,7 +47,7 @@
       wireshark = {
         enable = true;
       };
-      proxychains = {
+      wordlists = {
         enable = true;
       };
     };

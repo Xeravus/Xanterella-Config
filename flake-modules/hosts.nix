@@ -3,8 +3,11 @@
   withSystem,
   ...
 }: {
-  perSystem = {system, ...}: {
-    _module.args = {
+  perSystem = {
+    system,
+    ...
+  }: {
+    _module.agrs = {
       pkgs-new = import inputs.nixpkgs-new {
         system = system;
         config = {
@@ -17,7 +20,6 @@
           allowUnfree = true;
           permittedInsecurePackages = [
             "olm-3.2.16"
-            "garage-1.3.1"
           ];
         };
       };
@@ -34,183 +36,155 @@
   };
   flake = {
     nixosConfigurations = {
-      xeravus = withSystem "x86_64-linux" ({
-        pkgs-new,
-        pkgs-unstable,
-        pkgs-bleeding,
-        ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            inputs.disko.nixosModules.disko
-            ./../hosts/xeravus/configuration.nix
-          ];
-        });
       alpha = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
         pkgs-bleeding,
         ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            inputs.disko.nixosModules.disko
-            ./../hosts/alpha/configuration.nix
-            ./../profiles/ssh-keys.nix
-          ];
-        });
+      }: inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inputs = inputs;
+          pkgs-new = pkgs-new;
+          pkgs-unstable = pkgs-unstable;
+          pkgs-bleeding = pkgs-bleeding;
+        };
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./../hosts/alpha/configuration.nix
+          ./../profiles/ssh-keys.nix
+        ];
+      });
       beta = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
         pkgs-bleeding,
         ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            inputs.disko.nixosModules.disko
-            ./../hosts/beta/configuration.nix
-            ./../profiles/ssh-keys.nix
-          ];
-        });
+      }: inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inputs = inputs;
+          pkgs-new = pkgs-new;
+          pkgs-unstable = pkgs-unstable;
+          pkgs-bleeding = pkgs-bleeding;
+        };
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./../hosts/beta/configuration.nix
+          ./../profiles/ssh-keys.nix
+        ];
+      });
       delta = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
         pkgs-bleeding,
         ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            inputs.disko.nixosModules.disko
-            ./../hosts/delta/configuration.nix
-            ./../profiles/ssh-keys.nix
-          ];
-        });
+      }: inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inputs = inputs;
+          pkgs-new = pkgs-new;
+          pkgs-unstable = pkgs-unstable;
+          pkgs-bleeding = pkgs-bleeding;
+        };
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./../hosts/delta/configuration.nix
+          ./../profiles/ssh-keys.nix
+        ];
+      });
       epsilon = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
         pkgs-bleeding,
         ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            inputs.disko.nixosModules.disko
-            ./../hosts/epsilon/configuration.nix
-            ./../profiles/ssh-keys.nix
-          ];
-        });
-      zeta = withSystem "x86_64-linux" ({
-        pkgs-new,
-        pkgs-unstable,
-        pkgs-bleeding,
-        ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            inputs.disko.nixosModules.disko
-            ./../hosts/zeta/configuration.nix
-            ./../profiles/ssh-keys.nix
-          ];
-        });
-      xorus = withSystem "x86_64-linux" ({
-        pkgs-new,
-        pkgs-unstable,
-        pkgs-bleeding,
-        ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            inputs.disko.nixosModules.disko
-            ./../hosts/xorus/configuration.nix
-            ./../profiles/ssh-keys.nix
-          ];
-        });
+      }: inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inputs = inputs;
+          pkgs-new = pkgs-new;
+          pkgs-unstable = pkgs-unstable;
+          pkgs-bleeding = pkgs-bleeding;
+        };
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./../hosts/epsilon/configuration.nix
+          ./../profiles/ssh-keys.nix
+        ];
+      });
       installer = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
         pkgs-bleeding,
         ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            ./../hosts/installer/configuration.nix
-            ./../profiles/ssh-keys.nix
-          ];
-        });
-      crylia = withSystem "x86_64-linux" ({
+      }: inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inputs = inputs;
+          pkgs-new = pkgs-new;
+          pkgs-unstable = pkgs-unstable;
+          pkgs-bleeding = pkgs-bleeding;
+        };
+        modules = [
+          ./../hosts/installer/configuration.nix
+          ./../profiles/ssh-keys.nix
+        ];
+      });
+      omega = withSystem "x86_64-linux" ({
         pkgs-new,
         pkgs-unstable,
         pkgs-bleeding,
         ...
-      }:
-        inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inputs = inputs;
-            pkgs-new = pkgs-new;
-            pkgs-unstable = pkgs-unstable;
-            pkgs-bleeding = pkgs-bleeding;
-          };
-          modules = [
-            ./../hosts/crylia/configuration.nix
-            ./../profiles/ssh-keys.nix
-          ];
-        });
+      }: inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inputs = inputs;
+          pkgs-new = pkgs-new;
+          pkgs-unstable = pkgs-unstable;
+          pkgs-bleeding = pkgs-bleeding;
+        };
+        modules = [
+          ./../hosts/xorus/configuration.nix
+          ./../profiles/ssh-keys.nix
+        ];
+      });
+      xeravus = withSystem "x86_64-linux" ({
+        pkgs-new,
+        pkgs-unstable,
+        pkgs-bleeding,
+        ...
+      }: inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inputs = inputs;
+          pkgs-new = pkgs-new;
+          pkgs-unstable = pkgs-unstable;
+          pkgs-bleeding = pkgs-bleeding;
+        };
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./../hosts/xeravus/configuration.nix
+        ];
+      });
+      zeta = withSystem "x86_64-linux" ({
+        pkgs-new,
+        pkgs-unstable,
+        pkgs-bleeding,
+        ...
+      }: inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inputs = inputs;
+          pkgs-new = pkgs-new;
+          pkgs-unstable = pkgs-unstable;
+          pkgs-bleeding = pkgs-bleeding;
+        };
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./../hosts/zeta/configuration.nix
+          ./../profiles/ssh-keys.nix
+        ];
+      });
     };
   };
 }

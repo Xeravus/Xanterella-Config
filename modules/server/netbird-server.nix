@@ -5,13 +5,6 @@
   pkgs-bleeding,
   ...
 }: {
-  options = {
-    xanterella = {
-      netbird-server = {
-        enable = lib.mkEnableOption "Aktiviert Netbird als Server modul";
-      };
-    };
-  };
   config = lib.mkIf config.xanterella.netbird-server.enable {
     age = {
       secrets = {
@@ -20,10 +13,15 @@
         };
       };
     };
+    networking = {
+      firewall = {
+        allowedUDPPorts = [
+          51820
+        ];
+      };
+    };
     services = {
       netbird = {
-        enable = true;
-        package = pkgs-bleeding.netbird;
         clients = {
           "${config.networking.hostName}" = {
             autoStart = true;
@@ -34,13 +32,15 @@
             port = 51820;
           };
         };
+        enable = true;
+        package = pkgs-bleeding.netbird;
       };
     };
-    networking = {
-      firewall = {
-        allowedUDPPorts = [
-          51820
-        ];
+  };
+  options = {
+    xanterella = {
+      netbird-server = {
+        enable = lib.mkEnableOption "Aktiviert Netbird als Server modul";
       };
     };
   };

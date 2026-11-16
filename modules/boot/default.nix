@@ -5,8 +5,8 @@
     ./colmena.nix
     ./git.nix
     ./local.nix
-    ./network.nix
     ./mounts.nix
+    ./network.nix
     ./nix.nix
     ./nixvim.nix
     ./ssh.nix

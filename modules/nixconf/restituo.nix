@@ -33,25 +33,25 @@
     echo ""
   '';
 in {
-  options = {
-    xanterella = {
-      restituo = {
-        enable = lib.mkEnableOption "Aktiviert das Rebuild Script";
+    config = lib.mkIf cfg.enable {
+      environment = {
+        systemPackages = with pkgs; [
+          restituo
+          nh
+        ];
+      };
+      programs = {
+        nh = {
+          enable = true;
+          flake = "/home/cato/xanterella/config/";
+        };
       };
     };
-  };
-  config = lib.mkIf cfg.enable {
-    environment = {
-      systemPackages = with pkgs; [
-        restituo
-        nh
-      ];
-    };
-    programs = {
-      nh = {
-        enable = true;
-        flake = "/home/cato/xanterella/config/";
+    options = {
+      xanterella = {
+        restituo = {
+          enable = lib.mkEnableOption "Aktiviert das Rebuild Script";
+        };
       };
     };
-  };
-}
+  }

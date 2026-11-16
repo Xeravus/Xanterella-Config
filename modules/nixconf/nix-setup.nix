@@ -16,18 +16,18 @@
     sudo tailscale up --hostname crylia
   '';
 in {
-  options = {
-    xanterella = {
-      nix-setup = {
-        enable = lib.mkEnableOption "Aktiviert das Nix-Setup Script";
+    config = lib.mkIf cfg.enable {
+      environment = {
+        systemPackages = with pkgs; [
+          nix-setup
+        ];
       };
     };
-  };
-  config = lib.mkIf cfg.enable {
-    environment = {
-      systemPackages = with pkgs; [
-        nix-setup
-      ];
+    options = {
+      xanterella = {
+        nix-setup = {
+          enable = lib.mkEnableOption "Aktiviert das Nix-Setup Script";
+        };
+      };
     };
-  };
-}
+  }

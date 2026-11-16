@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      yazi = {
-        enable = lib.mkEnableOption "Aktiviert yazi";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.yazi.enable {
     environment = {
       systemPackages = with pkgs; [
@@ -21,6 +13,13 @@
     programs = {
       yazi = {
         enable = true;
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      yazi = {
+        enable = lib.mkEnableOption "Aktiviert yazi";
       };
     };
   };

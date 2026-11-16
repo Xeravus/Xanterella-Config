@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      bluetooth = {
-        enable = lib.mkEnableOption "Aktiviert bluetooth";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.bluetooth.enable {
     environment = {
       systemPackages = with pkgs; [
@@ -36,6 +28,13 @@
               sleep 3
         ${pkgs.bluez}/bin/bluetoothctl connect 84:D3:52:2A:B5:97
       '';
+    };
+  };
+  options = {
+    xanterella = {
+      bluetooth = {
+        enable = lib.mkEnableOption "Aktiviert bluetooth";
+      };
     };
   };
 }

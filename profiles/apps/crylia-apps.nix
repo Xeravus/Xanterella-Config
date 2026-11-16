@@ -6,21 +6,21 @@
 }: {
   config = {
     xanterella = {
+      brightnessctl = {
+        enable = true;
+      };
       browser = {
         librewolf = {
           enable = true;
         };
       };
-      brightnessctl = {
-        enable = true;
-      };
-      fastfetch = {
-        enable = true;
-      };
       btop = {
         enable = true;
       };
       direnv = {
+        enable = true;
+      };
+      fastfetch = {
         enable = true;
       };
     };

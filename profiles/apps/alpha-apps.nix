@@ -5,50 +5,50 @@
 }: {
   config = {
     xanterella = {
-      cluster-node = {
+      attic-server = {
         enable = true;
-        domain = "xanterella.de";
-        tailscale-domain = "gute-nessie.ts.net";
-        head = true;
       };
-      fastfetch = {
+      audiobookshelf = {
         enable = true;
       };
       btop = {
         enable = true;
       };
-      vikunja = {
+      cluster-node = {
+        domain = "xanterella.de";
         enable = true;
+        head = true;
+        tailscale-domain = "gute-nessie.ts.net";
       };
-      monitoring = {
-        enable = true;
-      };
-      jellyfin-bucket = {
-        enable = true;
-      };
-      matrix-server = {
-        enable = true;
-      };
-      opsbot = {
-        enable = false;
-      };
-      attic-server = {
-        enable = true;
-      };
-      livesync = {
-        enable = true;
-      };
-      vaultwarden = {
-        enable = true;
-      };
-      audiobookshelf = {
+      fastfetch = {
         enable = true;
       };
       immich = {
         enable = true;
         ml-domain = "beta.gute-nessie.ts.net";
       };
+      jellyfin-bucket = {
+        enable = true;
+      };
+      livesync = {
+        enable = true;
+      };
+      matrix-server = {
+        enable = true;
+      };
+      monitoring = {
+        enable = true;
+      };
+      opsbot = {
+        enable = false;
+      };
       prometheus = {
+        enable = true;
+      };
+      vaultwarden = {
+        enable = true;
+      };
+      vikunja = {
         enable = true;
       };
     };

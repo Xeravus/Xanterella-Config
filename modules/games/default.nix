@@ -1,9 +1,10 @@
 {
   imports = [
+    ./amd.nix
     ./discord.nix
-    ./minecraft.nix
-    ./logitech.nix
     ./gamemode.nix
+    ./logitech.nix
+    ./minecraft.nix
     ./nvidia.nix
     ./opengl.nix
     ./proton.nix

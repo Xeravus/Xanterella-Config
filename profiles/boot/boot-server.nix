@@ -8,9 +8,6 @@
       boot-server = {
         enable = true;
       };
-      stay-on = {
-        enable = true;
-      };
       colmena = {
         enable = true;
       };
@@ -26,25 +23,28 @@
       network = {
         enable = true;
       };
-      yazi = {
-        enable = true;
-      };
       nix = {
         enable = true;
       };
       nixvim = {
         enable = true;
       };
-      tailscale = {
-        enable = true;
-      };
-      zsh = {
-        enable = true;
-      };
       pyroclear = {
         enable = true;
       };
       ssh = {
+        enable = true;
+      };
+      stay-on = {
+        enable = true;
+      };
+      tailscale = {
+        enable = true;
+      };
+      yazi = {
+        enable = true;
+      };
+      zsh = {
         enable = true;
       };
     };

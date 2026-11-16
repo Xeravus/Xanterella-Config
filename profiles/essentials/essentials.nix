@@ -8,6 +8,9 @@
       alejandra = {
         enable = true;
       };
+      attic = {
+        enable = true;
+      };
       audio = {
         enable = true;
       };
@@ -20,19 +23,22 @@
       dbus = {
         enable = true;
       };
-      nix-warper = {
-        enable = true;
-      };
       firewall = {
         enable = true;
       };
       geistmono = {
         enable = true;
       };
-      utils = {
+      libnotify = {
         enable = true;
       };
-      libnotify = {
+      netbird = {
+        enable = false;
+      };
+      nix-warper = {
+        enable = true;
+      };
+      pyroclear = {
         enable = true;
       };
       restituo = {
@@ -44,25 +50,19 @@
       tailscale = {
         enable = true;
       };
-      netbird = {
-        enable = false;
-      };
       tree = {
         enable = true;
       };
       upower = {
         enable = true;
       };
+      utils = {
+        enable = true;
+      };
       wget = {
         enable = true;
       };
       zip = {
-        enable = true;
-      };
-      attic = {
-        enable = true;
-      };
-      pyroclear = {
         enable = true;
       };
       zsh = {

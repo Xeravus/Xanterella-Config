@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      openvpn = {
-        enable = lib.mkEnableOption "Aktiviert openvpn";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.openvpn.enable {
     environment = {
       systemPackages = with pkgs; [
@@ -20,7 +12,16 @@
     };
     networking = {
       firewall = {
-        allowedUDPPorts = [1194];
+        allowedUDPPorts = [
+          1194
+        ];
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      openvpn = {
+        enable = lib.mkEnableOption "Aktiviert openvpn";
       };
     };
   };

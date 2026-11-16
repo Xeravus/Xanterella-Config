@@ -4,33 +4,33 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      pihole = {
-        enable = lib.mkEnableOption "Aktiviert pihole";
+  config = lib.mkIf config.xanterella.pihole.enable {
+    networking = {
+      firewall = {
+        allowedTCPPorts = [
+          53
+          80
+        ];
+        allowedUDPPorts = [
+          53
+        ];
       };
     };
-  };
-
-  config = lib.mkIf config.xanterella.pihole.enable {
     virtualisation = {
-      podman = {
-        enable = true;
-      };
       oci-containers = {
         backend = "podman";
         containers = {
           pihole = {
+            environment = {
+              TZ = "Europe/Berlin";
+              WEBPASSWORD = "Extremsicherespasswort";
+            };
             image = "pihole/pihole:latest";
             ports = [
               "53:53/tcp"
               "53:53/udp"
               "80:80/tcp"
             ];
-            environment = {
-              TZ = "Europe/Berlin";
-              WEBPASSWORD = "Extremsicherespasswort";
-            };
             volumes = [
               "/var/lib/pihole:/etc/pihole"
               "/var/lib/dnsmasq.d:/etc/dnsmasq.d"
@@ -38,11 +38,15 @@
           };
         };
       };
+      podman = {
+        enable = true;
+      };
     };
-    networking = {
-      firewall = {
-        allowedTCPPorts = [53 80];
-        allowedUDPPorts = [53];
+  };
+  options = {
+    xanterella = {
+      pihole = {
+        enable = lib.mkEnableOption "Aktiviert pihole";
       };
     };
   };

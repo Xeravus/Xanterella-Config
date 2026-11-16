@@ -1,5 +1,8 @@
 {
-  perSystem = {pkgs, ...}: {
+  perSystem = {
+    pkgs,
+    ...
+  }: {
     devShells = {
       default = pkgs.mkShell {
         packages = with pkgs; [
@@ -7,6 +10,7 @@
         ];
       };
       rust = pkgs.mkShell {
+        RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
         packages = with pkgs; [
           cargo
           rustc
@@ -15,7 +19,6 @@
           rustfmt
           tokei
         ];
-        RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
       };
     };
   };

@@ -5,21 +5,7 @@
   pkgs-unstable,
   ...
 }: {
-  options = {
-    xanterella = {
-      amd = {
-        enable = lib.mkEnableOption "Aktiviere AMD Support und AMD Driver";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.amd.enable {
-    hardware = {
-      graphics = {
-        enable = true;
-        enable32Bit = true;
-      };
-    };
     boot = {
       initrd = {
         kernelModules = [
@@ -27,9 +13,24 @@
         ];
       };
     };
-    services.xserver.videoDrivers = ["amdgpu"];
     environment.systemPackages = with pkgs-unstable; [
       rocmPackages.rocm-smi
     ];
+    hardware = {
+      graphics = {
+        enable = true;
+        enable32Bit = true;
+      };
+    };
+    services.xserver.videoDrivers = [
+      "amdgpu"
+    ];
+  };
+  options = {
+    xanterella = {
+      amd = {
+        enable = lib.mkEnableOption "Aktiviere AMD Support und AMD Driver";
+      };
+    };
   };
 }

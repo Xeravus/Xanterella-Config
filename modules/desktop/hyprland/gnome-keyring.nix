@@ -4,25 +4,7 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      gnome-keyring = {
-        enable = lib.mkEnableOption "Aktiviert gnome-keyring";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.gnome-keyring.enable {
-    services = {
-      gnome = {
-        gnome-keyring = {
-          enable = true;
-        };
-        gcr-ssh-agent = {
-          enable = false;
-        };
-      };
-    };
     security = {
       pam = {
         services = {
@@ -31,6 +13,23 @@
             enableKwallet = lib.mkForce false;
           };
         };
+      };
+    };
+    services = {
+      gnome = {
+        gcr-ssh-agent = {
+          enable = false;
+        };
+        gnome-keyring = {
+          enable = true;
+        };
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      gnome-keyring = {
+        enable = lib.mkEnableOption "Aktiviert gnome-keyring";
       };
     };
   };

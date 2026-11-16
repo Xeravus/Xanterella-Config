@@ -6,17 +6,6 @@
   inputs,
   ...
 }: {
-  options = {
-    xanterella = {
-      quickshell = {
-        enable = lib.mkEnableOption "Aktiviert quickshell";
-      };
-      quickshell_noctalia = {
-        enable = lib.mkEnableOption "Aktiviert Quickshell mit der Noctalia Shell";
-      };
-    };
-  };
-
   config = lib.mkMerge [
     (lib.mkIf config.xanterella.quickshell.enable {
       environment = {
@@ -36,4 +25,14 @@
       };
     })
   ];
+  options = {
+    xanterella = {
+      quickshell = {
+        enable = lib.mkEnableOption "Aktiviert quickshell";
+      };
+      quickshell_noctalia = {
+        enable = lib.mkEnableOption "Aktiviert Quickshell mit der Noctalia Shell";
+      };
+    };
+  };
 }

@@ -1,23 +1,23 @@
 {
   imports = [
+    ./attic.nix
     ./audio.nix
-    ./pyroclear.nix
-    ./netbird.nix
-    ./nix-warper.nix
     ./bluetooth.nix
     ./btop.nix
     ./dbus.nix
     ./firewall.nix
     ./geistmono.nix
-    ./utils.nix
     ./libnotify.nix
+    ./netbird.nix
+    ./nix-warper.nix
+    ./pyroclear.nix
+    ./shells.nix
     ./sl.nix
     ./tailscale.nix
     ./tree.nix
     ./upower.nix
+    ./utils.nix
     ./wget.nix
     ./zip.nix
-    ./shells.nix
-    ./attic.nix
   ];
 }

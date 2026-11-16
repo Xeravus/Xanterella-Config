@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      hyprlock = {
-        enable = lib.mkEnableOption "Aktiviert hyprlock";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.hyprlock.enable {
     environment = {
       systemPackages = with pkgs; [
@@ -21,6 +13,13 @@
     programs = {
       hyprlock = {
         enable = true;
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      hyprlock = {
+        enable = lib.mkEnableOption "Aktiviert hyprlock";
       };
     };
   };

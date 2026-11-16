@@ -17,19 +17,16 @@
       dbus = {
         enable = true;
       };
-      nix-warper = {
-        enable = true;
-      };
       firewall = {
         enable = true;
       };
       geistmono = {
         enable = true;
       };
-      utils = {
+      libnotify = {
         enable = true;
       };
-      libnotify = {
+      nix-warper = {
         enable = true;
       };
       sl = {
@@ -42,6 +39,9 @@
         enable = true;
       };
       upower = {
+        enable = true;
+      };
+      utils = {
         enable = true;
       };
       wget = {

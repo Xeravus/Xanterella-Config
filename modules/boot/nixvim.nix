@@ -6,17 +6,6 @@
   inputs,
   ...
 }: {
-  imports = [
-    inputs.nixvim.nixosModules.default
-  ];
-  options = {
-    xanterella = {
-      nixvim = {
-        enable = lib.mkEnableOption "Aktiviert Nixvim";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.nixvim.enable {
     environment = {
       systemPackages = with pkgs; [
@@ -27,222 +16,187 @@
     };
     programs = {
       nixvim = {
-        enable = true;
+        colorschemes = {
+          catppuccin = {
+            autoLoad = true;
+            enable = true;
+          };
+        };
         defaultEditor = true;
+        enable = true;
+        extraPackages = with pkgs-new; [
+          alejandra
+        ];
         globals = {
           mapleader = " ";
         };
-        opts = {
-          number = true;
-          relativenumber = true;
-          termguicolors = true;
-          shiftwidth = 4;
-        };
         keymaps = [
           {
-            mode = ["n" "i" "v"];
+            action = "<Nop>";
             key = "<Up>";
-            action = "<Nop>";
+            mode = [
+              "n"
+              "i"
+              "v"
+            ];
           }
           {
-            mode = ["n" "i" "v"];
+            action = "<Nop>";
             key = "<Down>";
-            action = "<Nop>";
+            mode = [
+              "n"
+              "i"
+              "v"
+            ];
           }
           {
-            mode = ["n" "i" "v"];
+            action = "<Nop>";
             key = "<Left>";
-            action = "<Nop>";
+            mode = [
+              "n"
+              "i"
+              "v"
+            ];
           }
           {
-            mode = ["n" "i" "v"];
+            action = "<Nop>";
             key = "<Right>";
-            action = "<Nop>";
+            mode = [
+              "n"
+              "i"
+              "v"
+            ];
           }
           {
-            key = "<S-h>";
             action = "<cmd>bprevious<CR>";
+            key = "<S-h>";
             options = {
               desc = "Vorheriger Tab";
             };
           }
           {
-            key = "<S-l>";
             action = "<cmd>bnext<CR>";
+            key = "<S-l>";
             options = {
               desc = "Nächster Tab";
             };
           }
           {
-            key = "<leader>x";
             action = "<cmd>bdelete<CR>";
+            key = "<leader>x";
             options = {
               desc = "Aktuellen Tab schließen";
             };
           }
           {
-            mode = "n";
-            key = "<leader>fg";
             action = "<cmd>lua Snacks.picker.grep()<CR>";
+            key = "<leader>fg";
+            mode = "n";
             options = {
               desc = "Live Grep";
             };
           }
           {
-            mode = "n";
-            key = "<leader>fs";
             action = "<cmd>lua Snacks.picker.treesitter()<CR>";
+            key = "<leader>fs";
+            mode = "n";
             options = {
               desc = "Funktionen und Struktur (Outline)";
             };
           }
           {
-            mode = "n";
-            key = "<leader>j";
             action = "<cmd>cnext<CR>";
+            key = "<leader>j";
+            mode = "n";
             options = {
               desc = "Nächster Quickfix-Eintrag";
             };
           }
           {
-            mode = "n";
-            key = "<leader>k";
             action = "<cmd>cprev<CR>";
+            key = "<leader>k";
+            mode = "n";
             options = {
               desc = "Vorheriger Quickfix-Eintrag";
             };
           }
           {
-            mode = "n";
-            key = "<leader>fp";
             action = "<cmd>lua Snacks.picker.projects()<CR>";
+            key = "<leader>fp";
+            mode = "n";
             options = {
               desc = "Projects";
             };
           }
           {
-            mode = ["n" "t"];
-            key = "<leader>tt";
             action = "<cmd>lua Snacks.terminal.toggle()<CR>";
+            key = "<leader>tt";
+            mode = [
+              "n"
+              "t"
+            ];
             options = {
               desc = "Terminal umschalten";
             };
           }
           {
-            mode = "n";
-            key = "<leader>gg";
             action = "<cmd>lua Snacks.lazygit()<CR>";
+            key = "<leader>gg";
+            mode = "n";
             options = {
               desc = "Lazygit öffnen";
             };
           }
           {
-            mode = "n";
-            key = "<leader>ff";
             action = "<cmd>lua Snacks.explorer()<CR>";
+            key = "<leader>ff";
+            mode = "n";
             options = {
               desc = "Explorer";
             };
           }
           {
-            mode = ["n" "i"];
-            key = "<C-n>";
             action = "<cmd>lua Snacks.picker.files()<CR>";
+            key = "<C-n>";
+            mode = [
+              "n"
+              "i"
+            ];
             options = {
               desc = "Find Files";
             };
           }
         ];
-
-        colorschemes = {
-          catppuccin = {
-            enable = true;
-            autoLoad = true;
-          };
+        opts = {
+          number = true;
+          relativenumber = true;
+          shiftwidth = 4;
+          termguicolors = true;
         };
         plugins = {
-          lualine = {
-            enable = true;
-          };
-          treesitter = {
-            enable = true;
-          };
           bufferline = {
             enable = true;
           };
-          vim-be-good = {
-            enable = true;
-          };
-          hardtime = {
-            enable = true;
-          };
-          highlight-colors = {
-            enable = true;
-          };
-          neogit = {
-            enable = true;
-          };
-          gitsigns = {
-            enable = true;
-          };
-          web-devicons = {
-            enable = true;
-          };
-          snacks = {
+          cmp = {
             enable = true;
             settings = {
-              bigfile = {
-                enable = true;
+              mapping = {
+                "<C-Space>" = "cmp.mapping.complete()";
+                "<C-n>" = "cmp.mapping.select_next_item()";
+                "<C-p>" = "cmp.mapping.select_prev_item()";
+                "<S-CR>" = "cmp.mapping.confirm({ select = true })";
               };
-              notifier = {
-                enable = true;
-              };
-              terminal = {
-                enable = true;
-              };
-              lazygit = {
-                enable = true;
-              };
-              quickfile = {
-                enable = true;
-              };
-              statuscolumn = {
-                enable = true;
-              };
-              words = {
-                enable = true;
-              };
-              picker = {
-                enable = true;
-              };
-              explorer = {
-                enable = true;
-              };
-              dashboard = {
-                enable = true;
-                sections = [
-                  {section = "header";}
-                  {
-                    section = "keys";
-                    gap = 1;
-                    padding = 1;
-                  }
-                  {
-                    section = "recent_files";
-                    icon = " ";
-                    title = "Letzte Dateien";
-                    indent = 2;
-                    padding = 1;
-                  }
-                  {
-                    section = "projects";
-                    icon = " ";
-                    title = "Projekte";
-                    indent = 2;
-                    padding = 1;
-                  }
-                ];
-              };
+              sources = [
+                {
+                  name = "nvim_lsp";
+                }
+                {
+                  name = "path";
+                }
+                {
+                  name = "buffer";
+                }
+              ];
             };
           };
           conform-nvim = {
@@ -253,52 +207,120 @@
                 timeout_ms = 500;
               };
               formatters_by_ft = {
-                qml = [
-                  "qmlformat"
-                ];
                 nix = [
                   "alejandra"
                 ];
+                qml = [
+                  "qmlformat"
+                ];
               };
             };
           };
-          cmp = {
+          gitsigns = {
             enable = true;
-            settings = {
-              sources = [
-                {name = "nvim_lsp";}
-                {name = "path";}
-                {name = "buffer";}
-              ];
-              mapping = {
-                "<C-n>" = "cmp.mapping.select_next_item()";
-                "<C-p>" = "cmp.mapping.select_prev_item()";
-                "<S-CR>" = "cmp.mapping.confirm({ select = true })";
-                "<C-Space>" = "cmp.mapping.complete()";
-              };
-            };
+          };
+          hardtime = {
+            enable = true;
+          };
+          highlight-colors = {
+            enable = true;
           };
           lsp = {
             enable = true;
-            servers = {
-              # rust_analyzer = {
-              # enable = false;
-              # installCargo = true;
-              # installRustc = true;
-              # };
-            };
             keymaps = {
               lspBuf = {
-                "gd" = "definition";
-                "K" = "hover";
                 "<leader>ca" = "code_action";
+                "K" = "hover";
+                "gd" = "definition";
+              };
+            };
+            servers = { };
+          };
+          lualine = {
+            enable = true;
+          };
+          neogit = {
+            enable = true;
+          };
+          snacks = {
+            enable = true;
+            settings = {
+              bigfile = {
+                enable = true;
+              };
+              dashboard = {
+                enable = true;
+                sections = [
+                  {
+                    section = "header";
+                  }
+                  {
+                    gap = 1;
+                    padding = 1;
+                    section = "keys";
+                  }
+                  {
+                    icon = " ";
+                    indent = 2;
+                    padding = 1;
+                    section = "recent_files";
+                    title = "Letzte Dateien";
+                  }
+                  {
+                    icon = " ";
+                    indent = 2;
+                    padding = 1;
+                    section = "projects";
+                    title = "Projekte";
+                  }
+                ];
+              };
+              explorer = {
+                enable = true;
+              };
+              lazygit = {
+                enable = true;
+              };
+              notifier = {
+                enable = true;
+              };
+              picker = {
+                enable = true;
+              };
+              quickfile = {
+                enable = true;
+              };
+              statuscolumn = {
+                enable = true;
+              };
+              terminal = {
+                enable = true;
+              };
+              words = {
+                enable = true;
               };
             };
           };
+          treesitter = {
+            enable = true;
+          };
+          vim-be-good = {
+            enable = true;
+          };
+          web-devicons = {
+            enable = true;
+          };
         };
-        extraPackages = with pkgs-new; [
-          alejandra
-        ];
+      };
+    };
+  };
+  imports = [
+    inputs.nixvim.nixosModules.default
+  ];
+  options = {
+    xanterella = {
+      nixvim = {
+        enable = lib.mkEnableOption "Aktiviert Nixvim";
       };
     };
   };

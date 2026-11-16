@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      upower = {
-        enable = lib.mkEnableOption "Aktiviert upower";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.upower.enable {
     environment = {
       systemPackages = with pkgs; [
@@ -20,12 +12,19 @@
     };
     services = {
       upower = {
-        enable = true;
-        usePercentageForPolicy = true;
-        percentageLow = 15;
-        percentageCritical = 5;
-        percentageAction = 3;
         criticalPowerAction = "PowerOff";
+        enable = true;
+        percentageAction = 3;
+        percentageCritical = 5;
+        percentageLow = 15;
+        usePercentageForPolicy = true;
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      upower = {
+        enable = lib.mkEnableOption "Aktiviert upower";
       };
     };
   };

@@ -8,9 +8,6 @@
       boot-vicuna = {
         enable = true;
       };
-      stay-on = {
-        enable = true;
-      };
       colmena = {
         enable = true;
       };
@@ -29,13 +26,16 @@
       nixvim = {
         enable = true;
       };
+      ssh = {
+        enable = true;
+      };
+      stay-on = {
+        enable = true;
+      };
       tailscale = {
         enable = true;
       };
       zsh = {
-        enable = true;
-      };
-      ssh = {
         enable = true;
       };
     };

@@ -4,27 +4,8 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      nix = {
-        enable = lib.mkEnableOption "Aktiviert nix";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.nix.enable {
     nix = {
-      settings = {
-        experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
-        trusted-users = [
-          "root"
-          "cato"
-        ];
-        auto-optimise-store = true;
-      };
       gc = {
         automatic = true;
         dates = "weekly";
@@ -33,10 +14,28 @@
       optimise = {
         automatic = true;
       };
+      settings = {
+        auto-optimise-store = true;
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
+        trusted-users = [
+          "root"
+          "cato"
+        ];
+      };
     };
     nixpkgs = {
       config = {
         allowUnfree = true;
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      nix = {
+        enable = lib.mkEnableOption "Aktiviert nix";
       };
     };
   };

@@ -9,110 +9,29 @@
   cfg = config.xanterella.matrix-server;
   nodeCfg = config.xanterella.cluster-node;
 in {
-  options = {
-    xanterella = {
-      matrix-server = {
-        enable = lib.mkEnableOption "Aktiviert Matrix Pipeline";
-        domain = lib.mkOption {
-          type = lib.types.str;
-          default = "matrix.${nodeCfg.domain}";
-        };
-      };
-    };
-  };
-  config = lib.mkIf (cfg.enable && nodeCfg.enable) {
-    age = {
-      secrets = {
-        matrix-password = {
-          file = ./../agenix/matrix.yaml.age;
-          owner = "matrix-synapse";
-          group = "matrix-synapse";
-        };
-      };
-    };
-    services = {
-      postgresql = {
-        enable = true;
-        ensureDatabases = [
-          "matrix-synapse"
-          "mautrix-whatsapp"
-          "mautrix-discord"
-        ];
-        ensureUsers = [
-          {
-            name = "matrix-synapse";
-            ensureDBOwnership = true;
-          }
-          {
-            name = "mautrix-whatsapp";
-            ensureDBOwnership = true;
-          }
-          {
-            name = "mautrix-discord";
-            ensureDBOwnership = true;
-          }
-        ];
-      };
-      matrix-synapse = {
-        enable = true;
-        settings = {
-          server_name = cfg.domain;
-          enable_registration = false;
-          database = {
-            name = "psycopg2";
-            allow_unsafe_locale = true;
-            args = {
-              user = "matrix-synapse";
-              database = "matrix-synapse";
-              host = "/run/postgresql";
-            };
-          };
-        };
-        extraConfigFiles = [
-          config.age.secrets.matrix-password.path
-        ];
-      };
-      mautrix-whatsapp = {
-        enable = true;
-        package = pkgs-bleeding.mautrix-whatsapp;
-        settings = {
-          homeserver = {
-            address = "http://127.0.0.1:8008";
-            domain = cfg.domain;
-          };
-          bridge = {
-            permissions = {
-              "@xeravus:${cfg.domain}" = "admin";
-            };
+    config = lib.mkIf (cfg.enable && nodeCfg.enable) {
+      age = {
+        secrets = {
+          matrix-password = {
+            file = ./../agenix/matrix.yaml.age;
+            group = "matrix-synapse";
+            owner = "matrix-synapse";
           };
         };
       };
-      mautrix-discord = {
-        enable = true;
-        package = pkgs-bleeding.mautrix-discord;
-        settings = {
-          appservice = {
-            database = {
-              type = "postgres";
-              uri = "postgres://mautrix-discord@/mautrix-discord?host=/run/postgresql";
-            };
-          };
-          homeserver = {
-            address = "http://127.0.0.1:8008";
-            domain = cfg.domain;
-          };
-          bridge = {
-            permissions = {
-              "@xeravus:${cfg.domain}" = "admin";
-            };
-          };
+      networking = {
+        firewall = {
+          allowedTCPPorts = [
+            1007
+          ];
         };
       };
-      caddy = {
-        enable = true;
-        virtualHosts = {
-          "http://matrix.xanterella.de" = {
-            extraConfig = ''
+      services = {
+        caddy = {
+          enable = true;
+          virtualHosts = {
+            "http://matrix.xanterella.de" = {
+              extraConfig = ''
               reverse_proxy /_matrix* 127.0.0.1:8008
               reverse_proxy /_synapse/client* 127.0.0.1:8008
 
@@ -126,9 +45,9 @@ in {
                 }`
               }
             '';
-          };
-          "http://xanterella.de" = {
-            extraConfig = ''
+            };
+            "http://xanterella.de" = {
+              extraConfig = ''
               handle /.well-known/matrix/client {
                 header Access-Control-Allow-Origin "*"
                 header Content-Type "application/json"
@@ -139,38 +58,119 @@ in {
                 }`
               }
             '';
+            };
           };
         };
-      };
-      tailscale = {
-        enable = true;
-        permitCertUid = "caddy";
-      };
-    };
-    systemd = {
-      services = {
         matrix-synapse = {
-          serviceConfig = {
-            TimeoutStartSec = "180s";
+          enable = true;
+          extraConfigFiles = [
+            config.age.secrets.matrix-password.path
+          ];
+          settings = {
+            database = {
+              allow_unsafe_locale = true;
+              args = {
+                database = "matrix-synapse";
+                host = "/run/postgresql";
+                user = "matrix-synapse";
+              };
+              name = "psycopg2";
+            };
+            enable_registration = false;
+            server_name = cfg.domain;
           };
         };
-      };
-    };
-    users = {
-      users = {
-        caddy = {
-          extraGroups = [
-            "tailscale"
+        mautrix-discord = {
+          enable = true;
+          package = pkgs-bleeding.mautrix-discord;
+          settings = {
+            appservice = {
+              database = {
+                type = "postgres";
+                uri = "postgres://mautrix-discord@/mautrix-discord?host=/run/postgresql";
+              };
+            };
+            bridge = {
+              permissions = {
+                "@xeravus:${cfg.domain}" = "admin";
+              };
+            };
+            homeserver = {
+              address = "http://127.0.0.1:8008";
+              domain = cfg.domain;
+            };
+          };
+        };
+        mautrix-whatsapp = {
+          enable = true;
+          package = pkgs-bleeding.mautrix-whatsapp;
+          settings = {
+            bridge = {
+              permissions = {
+                "@xeravus:${cfg.domain}" = "admin";
+              };
+            };
+            homeserver = {
+              address = "http://127.0.0.1:8008";
+              domain = cfg.domain;
+            };
+          };
+        };
+        postgresql = {
+          enable = true;
+          ensureDatabases = [
+            "matrix-synapse"
+            "mautrix-whatsapp"
+            "mautrix-discord"
+          ];
+          ensureUsers = [
+            {
+              ensureDBOwnership = true;
+              name = "matrix-synapse";
+            }
+            {
+              ensureDBOwnership = true;
+              name = "mautrix-whatsapp";
+            }
+            {
+              ensureDBOwnership = true;
+              name = "mautrix-discord";
+            }
           ];
         };
+        tailscale = {
+          enable = true;
+          permitCertUid = "caddy";
+        };
+      };
+      systemd = {
+        services = {
+          matrix-synapse = {
+            serviceConfig = {
+              TimeoutStartSec = "180s";
+            };
+          };
+        };
+      };
+      users = {
+        users = {
+          caddy = {
+            extraGroups = [
+              "tailscale"
+            ];
+          };
+        };
       };
     };
-    networking = {
-      firewall = {
-        allowedTCPPorts = [
-          1007
-        ];
+    options = {
+      xanterella = {
+        matrix-server = {
+          domain = lib.mkOption {
+            default = "matrix.${nodeCfg.domain}";
+            type = lib.types.str;
+          };
+          enable = lib.mkEnableOption "Aktiviert Matrix Pipeline";
+        };
       };
     };
-  };
-}
+  }

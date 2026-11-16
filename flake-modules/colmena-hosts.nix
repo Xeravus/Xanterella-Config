@@ -5,7 +5,7 @@
   commonSSHKeys,
   pkgs-new,
   pkgs-unstable,
-  pkgs-bleeding,
+  pkgs-unstable,
   ...
 }: {
   meta = {
@@ -16,14 +16,6 @@
       };
       purity = "impure";
     };
-    nodeNixpkgs = {
-      vicuna = import inputs.nixpkgs {
-        system = "aarch64-linux";
-        config = {
-          allowUnfree = true;
-        };
-      };
-    };
     specialArgs = {
       inputs = inputs;
       pkgs-new = pkgs-new;
@@ -31,14 +23,16 @@
       pkgs-bleeding = pkgs-bleeding;
     };
   };
-  xeravus = {
+  alpha = {
     deployment = {
-      targetHost = null;
-      allowLocalDeployment = true;
-      buildOnTarget = true;
+      targetHost = "alpha";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
     };
     imports = [
-      ./../hosts/xeravus/configuration.nix
+      inputs.disko.nixosModules.disko
+      ./../hosts/alpha/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
   };
@@ -50,7 +44,46 @@
       keys = commonSSHKeys;
     };
     imports = [
+      inputs.disko.nixosModules.disko
       ./../hosts/beta/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
+  delta = {
+    deployment = {
+      targetHost = "delta";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      inputs.disko.nixosModules.disko
+      ./../hosts/delta/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
+  epsilon = {
+    deployment = {
+      targetHost = "epsilon";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      inputs.disko.nixosModules.disko
+      ./../hosts/epsilon/configuration.nix
+      ./../profiles/ssh-keys.nix
+    ];
+  };
+  installer = {
+    deployment = {
+      targetHost = "installer";
+      targetUser = taruser;
+      buildOnTarget = false;
+      keys = commonSSHKeys;
+    };
+    imports = [
+      ./../hosts/installer/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
   };
@@ -66,42 +99,15 @@
       ./../profiles/ssh-keys.nix
     ];
   };
-  alpha = {
+  xeravus = {
     deployment = {
-      targetHost = "alpha";
-      targetUser = taruser;
-      buildOnTarget = false;
-      keys = commonSSHKeys;
-    };
-    imports = [
-      ./../hosts/alpha/configuration.nix
-      ./../profiles/ssh-keys.nix
-    ];
-  };
-  delta = {
-    deployment = {
-      targetHost = "delta";
-      targetUser = taruser;
-      buildOnTarget = false;
-      keys = commonSSHKeys;
+      targetHost = null;
+      allowLocalDeployment = true;
+      buildOnTarget = true;
     };
     imports = [
       inputs.disko.nixosModules.disko
-      ./../hosts/alpha/configuration.nix
-      ./../profiles/ssh-keys.nix
-    ];
-  };
-  epsilon = {
-    deployment = {
-      targetHost = "epsilon";
-      targetUser = taruser;
-      buildOnTarget = false;
-      keys = commonSSHKeys;
-    };
-    imports = [
-      inputs.disko.nixosModules.disko
-      ./../hosts/epsilon/configuration.nix
-      ./../profiles/ssh-keys.nix
+      ./../hosts/xeravus/configuration.nix
     ];
   };
   zeta = {

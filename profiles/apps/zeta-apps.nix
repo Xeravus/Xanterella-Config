@@ -5,29 +5,29 @@
 }: {
   config = {
     xanterella = {
+      btop = {
+        enable = true;
+      };
       cluster-node = {
+        enable = true;
+      };
+      fastfetch = {
+        enable = true;
+      };
+      garage = {
         enable = true;
       };
       github-runner = {
         "default_builder" = {
-          url = "https://github.com/Xeravus/Xanterella-Cli";
           labels = [
             "nixos"
             "self-hosted"
             "xanterella"
           ];
+          url = "https://github.com/Xeravus/Xanterella-Cli";
         };
       };
-      fastfetch = {
-        enable = true;
-      };
-      btop = {
-        enable = true;
-      };
       prometheus = {
-        enable = true;
-      };
-      garage = {
         enable = true;
       };
     };

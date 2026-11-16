@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      local = {
-        enable = lib.mkEnableOption "Aktiviert local";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.local.enable {
     age = {
       secrets = {
@@ -23,8 +15,8 @@
         };
       };
     };
-    time = {
-      timeZone = "Europe/Berlin";
+    console = {
+      keyMap = "de";
     };
     i18n = {
       defaultLocale = "en_US.UTF-8";
@@ -40,27 +32,6 @@
         LC_TIME = "de_DE.UTF-8";
       };
     };
-    console = {
-      keyMap = "de";
-    };
-    users = {
-      mutableUsers = false;
-      users = {
-        cato = {
-          isNormalUser = true;
-          description = "Cato";
-          extraGroups = [
-            "networkmanager"
-            "wheel"
-            "plugdev"
-          ];
-          hashedPasswordFile = config.age.secrets.password_cato.path;
-        };
-        root = {
-          hashedPasswordFile = config.age.secrets.password_root.path;
-        };
-      };
-    };
     services = {
       xserver = {
         enable = true;
@@ -68,6 +39,34 @@
           layout = "de";
           variant = "";
         };
+      };
+    };
+    time = {
+      timeZone = "Europe/Berlin";
+    };
+    users = {
+      mutableUsers = false;
+      users = {
+        cato = {
+          description = "Cato";
+          extraGroups = [
+            "networkmanager"
+            "wheel"
+            "plugdev"
+          ];
+          hashedPasswordFile = config.age.secrets.password_cato.path;
+          isNormalUser = true;
+        };
+        root = {
+          hashedPasswordFile = config.age.secrets.password_root.path;
+        };
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      local = {
+        enable = lib.mkEnableOption "Aktiviert local";
       };
     };
   };

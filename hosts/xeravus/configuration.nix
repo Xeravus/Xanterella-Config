@@ -4,6 +4,13 @@
   lib,
   ...
 }: {
+  boot = {
+    binfmt = {
+      emulatedSystems = [
+        "aarch64-linux"
+      ];
+    };
+  };
   imports = [
     ./hardware-configuration.nix
     ./../../modules
@@ -17,16 +24,11 @@
     ./../../profiles/creative.nix
     ./../../profiles/gaming.nix
   ];
-  boot = {
-    binfmt = {
-      emulatedSystems = ["aarch64-linux"];
-    };
-  };
-  zramSwap.enable = true;
   networking = {
     hostName = "xeravus";
   };
   system = {
-    stateVersion = "25.11"; # Did you read the comment?
+    stateVersion = "25.11";
   };
+  zramSwap.enable = true;
 }

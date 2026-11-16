@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  options = {
-    xanterella = {
-      audio = {
-        enable = lib.mkEnableOption "Aktiviert playerctl, pipewire, pavucontrol";
-      };
-    };
-  };
-
   config = lib.mkIf config.xanterella.audio.enable {
     environment = {
       systemPackages = with pkgs; [
@@ -22,14 +14,21 @@
     };
     services = {
       pipewire = {
-        enable = true;
         alsa = {
           enable = true;
           support32Bit = true;
         };
+        enable = true;
         pulse = {
           enable = true;
         };
+      };
+    };
+  };
+  options = {
+    xanterella = {
+      audio = {
+        enable = lib.mkEnableOption "Aktiviert playerctl, pipewire, pavucontrol";
       };
     };
   };

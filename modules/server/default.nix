@@ -1,28 +1,28 @@
 {
   imports = [
-    ./paperlessngx.nix
-    ./minecraft-server.nix
     ./arcane.nix
+    ./attic-server.nix
+    ./audiobookshelf.nix
+    ./cluster-node.nix
+    ./garage.nix
+    ./github-runner.nix
+    ./homarr.nix
     ./home-assistant.nix
+    ./immich.nix
     ./jellyfin.nix
     ./livesync.nix
-    ./opsbot.nix
-    ./cluster-node.nix
-    ./metasploitable.nix
-    ./prometheus.nix
-    ./audiobookshelf.nix
-    ./immich.nix
-    ./vikunja.nix
-    ./netbird-server.nix
-    ./stay-on.nix
-    ./pihole.nix
-    ./vaultwarden.nix
-    ./github-runner.nix
-    ./monitoring.nix
-    ./stress.nix
     ./matrix-server.nix
-    ./homarr.nix
-    ./attic-server.nix
-    ./garage.nix
+    ./metasploitable.nix
+    ./minecraft-server.nix
+    ./monitoring.nix
+    ./netbird-server.nix
+    ./opsbot.nix
+    ./paperlessngx.nix
+    ./pihole.nix
+    ./prometheus.nix
+    ./stay-on.nix
+    ./stress.nix
+    ./vaultwarden.nix
+    ./vikunja.nix
   ];
 }

@@ -8,10 +8,13 @@
       ani-cli = {
         enable = true;
       };
+      bitwarden = {
+        enable = false;
+      };
       cava = {
         enable = true;
       };
-      vlc = {
+      element = {
         enable = true;
       };
       fastfetch = {
@@ -21,12 +24,6 @@
         enable = true;
       };
       kitty = {
-        enable = true;
-      };
-      bitwarden = {
-        enable = false;
-      };
-      element = {
         enable = true;
       };
       nitch = {
@@ -48,6 +45,9 @@
         enable = true;
       };
       tldr = {
+        enable = true;
+      };
+      vlc = {
         enable = true;
       };
       yazi = {

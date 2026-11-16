@@ -8,13 +8,16 @@
       discord = {
         enable = true;
       };
-      minecraft = {
-        enable = true;
+      gamemode = {
+        enable = false;
       };
       logitech = {
         enable = true;
       };
-      gamemode = {
+      minecraft = {
+        enable = true;
+      };
+      mount-games = {
         enable = false;
       };
       nvidia = {
@@ -27,9 +30,6 @@
         enable = false;
       };
       steam = {
-        enable = false;
-      };
-      mount-games = {
         enable = false;
       };
     };

@@ -1,19 +1,19 @@
 {
   imports = [
-    ./wordlists.nix
-    ./burp-suite.nix
-    ./sqlmap.nix
-    ./openvpn.nix
     ./aircrack-ng.nix
-    ./hashcat.nix
-    ./metasploit.nix
-    ./nmap.nix
-    ./hydra.nix
-    ./wifite.nix
-    ./wireshark.nix
-    ./proxychains.nix
+    ./burp-suite.nix
+    ./ffuf.nix
     ./git-dumper.nix
     ./gobuster.nix
-    ./ffuf.nix
+    ./hashcat.nix
+    ./hydra.nix
+    ./metasploit.nix
+    ./nmap.nix
+    ./openvpn.nix
+    ./proxychains.nix
+    ./sqlmap.nix
+    ./wifite.nix
+    ./wireshark.nix
+    ./wordlists.nix
   ];
 }

@@ -5,60 +5,59 @@
   ...
 }: let
   pixie-sddm-theme = pkgs.stdenv.mkDerivation {
+    installPhase = ''
+      mkdir -p $out/share/sddm/themes/pixie
+      cp -r ./* $out/share/sddm/themes/pixie/
+      echo "QtVersion=6" >> $out/share/sddm/themes/pixie/metadata.desktop
+    '';
     pname = "pixie-sddm";
-    version = "1.0";
     src = pkgs.fetchFromGitHub {
       owner = "xCaptaiN09";
       repo = "pixie-sddm";
       rev = "main";
       sha256 = "sha256-1PDWX8bJfc0HYMW9MsxWwDXDoYy5aaehUWr7FW3yR9U=";
     };
-    installPhase = ''
-      mkdir -p $out/share/sddm/themes/pixie
-      cp -r ./* $out/share/sddm/themes/pixie/
-      echo "QtVersion=6" >> $out/share/sddm/themes/pixie/metadata.desktop
-    '';
+    version = "1.0";
   };
 in {
-  options = {
-    xanterella = {
-      sddm = {
-        enable = lib.mkEnableOption "Aktiviert sddm";
+    config = lib.mkIf config.xanterella.sddm.enable {
+      environment = {
+        systemPackages = with pkgs; [
+          pixie-sddm-theme
+          kdePackages.qtdeclarative
+          kdePackages.qtsvg
+          kdePackages.qt5compat
+        ];
       };
-    };
-  };
-
-  config = lib.mkIf config.xanterella.sddm.enable {
-    services = {
-      displayManager = {
-        sddm = {
-          enable = true;
-          package = pkgs.kdePackages.sddm;
-          autoNumlock = true;
-          theme = "pixie";
-          wayland = {
-            enable = true;
+      security = {
+        pam = {
+          services = {
+            sddm = {
+              enableKwallet = true;
+            };
           };
         };
-        defaultSession = "hyprland";
       };
-    };
-    security = {
-      pam = {
-        services = {
+      services = {
+        displayManager = {
+          defaultSession = "hyprland";
           sddm = {
-            enableKwallet = true;
+            autoNumlock = true;
+            enable = true;
+            package = pkgs.kdePackages.sddm;
+            theme = "pixie";
+            wayland = {
+              enable = true;
+            };
           };
         };
       };
     };
-    environment = {
-      systemPackages = with pkgs; [
-        pixie-sddm-theme
-        kdePackages.qtdeclarative
-        kdePackages.qtsvg
-        kdePackages.qt5compat
-      ];
+    options = {
+      xanterella = {
+        sddm = {
+          enable = lib.mkEnableOption "Aktiviert sddm";
+        };
+      };
     };
-  };
-}
+  }
