@@ -7,13 +7,6 @@
   nodeCfg = config.xanterella.cluster-node;
 in {
     config = lib.mkIf (cfg.enable && nodeCfg.enable) {
-      age = {
-        secrets = {
-          arcane-token = {
-            file = ./. + "/../agenix/arcane-token-${config.networking.hostName}.env.age";
-          };
-        };
-      };
       networking.firewall.allowedTCPPorts = [
         3552
       ];
@@ -26,9 +19,7 @@ in {
                 "EDGE_TRANSPORT" = "poll";
                 "MANAGER_API_URL" = "http://lacrux.gute-nessie.ts.net:3552";
               };
-              environmentFiles = [
-                config.age.secrets.arcane-token.path
-              ];
+              environmentFiles = [ ];
               extraOptions = [
                 "--privileged"
                 "--network=host"
