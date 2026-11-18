@@ -1,5 +1,3 @@
 {
-  imports = [
-    ./usb-secrets.nix
-  ];
+  imports = [ ];
 }
