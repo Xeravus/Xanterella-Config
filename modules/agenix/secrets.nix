@@ -28,12 +28,6 @@ let
   xeravus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzkvv1qjg8y//HRhcyEoZ7luoVhBNgqvJ1HIzceAVu1";
   zeta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH0yQPa0pLkli9ff1ryMRwFKGdOVpSVI1RraSxHPWhjA";
 in {
-    "arcane-token-alpha.env.age" = {
-      publicKeys = users ++ server;
-    };
-    "arcane-token-beta.env.age" = {
-      publicKeys = users ++ server;
-    };
     "cloudflare-token.age" = {
       publicKeys = users ++ server;
     };
