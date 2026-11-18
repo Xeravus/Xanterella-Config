@@ -18,15 +18,15 @@
     "kvm-intel"
   ];
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/d53b5516-59f1-4ec1-a7b2-03549ebf5a59";
+    device = "/dev/disk/by-uuid/de31c610-ee5f-4961-985c-7243cd3994b1";
     fsType = "ext4";
   };
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/7548-41A2";
+    device = "/dev/disk/by-uuid/88F4-13DA";
     fsType = "vfat";
     options = [
-      "fmask=0022"
-      "dmask=0022"
+      "fmask=0077"
+      "dmask=0077"
     ];
   };
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
