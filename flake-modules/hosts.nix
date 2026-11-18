@@ -7,7 +7,7 @@
     system,
     ...
   }: {
-    _module.agrs = {
+    _module.args = {
       pkgs-new = import inputs.nixpkgs-new {
         system = system;
         config = {
