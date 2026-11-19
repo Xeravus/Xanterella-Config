@@ -1,18 +1,18 @@
 {
   imports = [
-    ./desktop
-    ./apps
-    ./boot
-    ./vault
-    ./nixconf
-    ./essentials
-    ./server
-    ./desktop/hyprland
     ./creative
+    ./dev
+    ./apps
     ./agenix
+    ./desktop/gnome
+    ./server
+    ./essentials
+    ./boot
+    ./desktop
     ./games
     ./cybersec
-    ./dev
-    ./desktop/gnome
+    ./nixconf
+    ./vault
+    ./desktop/hyprland
   ];
 }
