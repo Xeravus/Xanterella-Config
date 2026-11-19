@@ -95,7 +95,7 @@
       keys = commonSSHKeys;
     };
     imports = [
-      ./../hosts/xorus/configuration.nix
+      ./../hosts/omega/configuration.nix
       ./../profiles/ssh-keys.nix
     ];
   };

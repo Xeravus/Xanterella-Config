@@ -144,7 +144,7 @@
           pkgs-bleeding = pkgs-bleeding;
         };
         modules = [
-          ./../hosts/xorus/configuration.nix
+          ./../hosts/omega/configuration.nix
           ./../profiles/ssh-keys.nix
         ];
       });
